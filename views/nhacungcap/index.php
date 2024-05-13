@@ -1,11 +1,8 @@
 <?php
-require_once ('models/nhacungcap.php');
-//?>
+require_once('models/nhacungcap.php');
+?>
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-center text-gray-800 ">Nhà Cung Cấp</h1>
-<!--<p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.-->
-<!--    For more information about DataTables, please visit the <a target="_blank"-->
-<!--                                                               href="https://datatables.net">official DataTables documentation</a>.</p>-->
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -21,39 +18,40 @@ require_once ('models/nhacungcap.php');
                 <tr>
                     <th>ID</th>
                     <th>Nhà cung cấp</th>
+                    <th>Người liên hệ</th>
                     <th>Điện thoại</th>
                     <th>Email</th>
                     <th>Địa chỉ</th>
-                    <th>Action</th>
+                    <th>Hành động</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
                     <th>ID</th>
                     <th>Nhà cung cấp</th>
+                    <th>Người liên hệ</th>
                     <th>Điện thoại</th>
                     <th>Email</th>
                     <th>Địa chỉ</th>
-                    <th>Action</th>
+                    <th>Hành động</th>
                 </tr>
                 </tfoot>
                 <tbody>
 
                 <?php
                 foreach ($nhacungcap as $item){
-
                     ?>
                     <form method="post">
                         <tr>
                             <td><?= $item->Id   ?></td>
                             <td><?= $item->TenNCC?></td>
+                            <td><?= $item->NguoiLienHe?></td>
                             <td><?= $item->DienThoai?></td>
                             <td><?= $item->Email?></td>
                             <td><?= $item->DiaChi?></td>
                             <td>
-                                <!--                       <a  href="index.php?controller=khachhangs&action=showPost&id=--><!--"  class='btn btn-primary mr-3'>Details</a>-->
-                                <a  href="index.php?controller=nhacungcap&action=edit&id=<?= $item->Id?>"  class='btn btn-primary mr-3'>Edit</a>
-                                <button type="submit" name="dele" value="<?= $item->Id ?>"    class='btn btn-danger'>Delete</button>
+                                <a  href="index.php?controller=nhacungcap&action=edit&id=<?= $item->Id?>"  class='btn btn-primary mr-3'>Sửa</a>
+                                <button type="submit" name="dele" value="<?= $item->Id ?>"    class='btn btn-danger'>Xóa</button>
                     </form>
                     </td>
                     </tr>
@@ -71,5 +69,3 @@ if(isset($_POST['dele'])){
     NhaCungCap::delete($id);
 }
 ?>
-
-

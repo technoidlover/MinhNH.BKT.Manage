@@ -8,7 +8,10 @@
             <label for="validationDefault01">Tên Nhà Cung Cấp</label>
             <input type="text" class="form-control" id="validationDefault01" value="<?= $nhacungcap->TenNCC ?> " name="tenncc" placeholder=""  required>
         </div>
-
+        <div class="col-md-4 mb-3">
+            <label for="validationDefault03">Người Liên Hệ</label>
+            <input type="text" class="form-control" id="validationDefault03" value="<?= $nhacungcap->NguoiLienHe ?>" name="nguoilienhe" placeholder="Tên Người Liên Hệ" required>
+        </div>
         <div class="col-md-4 mb-3">
             <label for="validationDefault01">Điện thoại</label>
             <input type="text" class="form-control" id="validationDefault01" value="<?= $nhacungcap->DienThoai ?> " name="dienthoai" placeholder=""  required>
@@ -17,6 +20,7 @@
             <label for="validationDefault01">Email</label>
             <input type="email" class="form-control" id="validationDefault01" value="<?= $nhacungcap->Email ?> " name="email" placeholder=""  required>
         </div>
+
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Địa Chỉ</label>
             <input type="text" class="form-control" id="validationDefault02" value="<?= $nhacungcap->DiaChi ?> " name="diachi" placeholder="" required>
@@ -31,6 +35,8 @@ if(isset($_POST['edit-ncc'])){
     $dienthoai= $_POST['dienthoai'] ;
     $email= $_POST['email'] ;
     $diachi= $_POST['diachi'] ;
-    NhaCungCap::update($id,$ten,$dienthoai,$email,$diachi);
+    $nguoilienhe= $_POST['nguoilienhe']; // new code
+    // Gọi hàm update của class NhaCungCap với đúng số lượng tham số
+    NhaCungCap::update($id,$ten,$dienthoai,$email,$diachi,$nguoilienhe); // updated code
 }
 ?>

@@ -25,6 +25,7 @@ require_once ('models/nhanvien.php');
                     <th>Email</th>
                     <th>Địa chỉ</th>
                     <th>Tài khoản</th>
+                    <th>Quyền</th>
                     <th>IsActive</th>
                     <th>Action</th>
                 </tr>
@@ -38,6 +39,7 @@ require_once ('models/nhanvien.php');
                     <th>Email</th>
                     <th>Địa chỉ</th>
                     <th>Tài khoản</th>
+                    <th>Quyền</th>
                     <th>IsActive</th>
                     <th>Action</th>
                 </tr>
@@ -56,6 +58,7 @@ require_once ('models/nhanvien.php');
                             <td><?= $item->Email?></td>
                             <td><?= $item->DiaChi?></td>
                             <td><?= $item->TaiKhoan?></td>
+                            <td><?= $item->Quyen?></td>
                             <td><?php
                                 if($item->IsActive=="1"){
                                         echo 'yes';
