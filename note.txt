@@ -1,0 +1,2 @@
+xuất hang: TRẠNG Thái lúc tạo bỏ quá, lúc sửa sẽ có thông tin là đã gửi, đã nhận,chấp nhận, hủy dơn, đang thanh toán, đã thanh toán
+nhân viên: ai đang dung thì lấy ng đấy luôn
