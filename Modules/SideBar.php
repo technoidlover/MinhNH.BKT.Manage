@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/QuanLyKho/">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/MinhNH.BKT.Manage">
         <img src="./Assets/img/logo.png" alt="" style="height: 190%; margin-left: -5%;">
     </a>
 
@@ -26,22 +26,20 @@
     <!-- Nav Item - Pages Collapse Menu -->
 
     <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNewItem"
-       aria-expanded="true" aria-controls="collapseNewItem">
-        <i class="fas fa-fw fa-cog"></i>
-        <span>Kho</span>
-    </a>
-    <div id="collapseNewItem" class="collapse" aria-labelledby="headingNewItem" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Action:</h6>
-            <a class="collapse-item" href="?controller=newitem">Kho 1</a>
-            <a class="collapse-item" href="?controller=newitem&action=insert">Kho 2</a>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNewItem" aria-expanded="true" aria-controls="collapseNewItem">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Kho</span>
+        </a>
+        <div id="collapseNewItem" class="collapse" aria-labelledby="headingNewItem" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Action:</h6>
+                <a class="collapse-item" href="?controller=newitem">Kho 1</a>
+                <a class="collapse-item" href="?controller=newitem&action=insert">Kho 2</a>
+            </div>
         </div>
-    </div>
-</li>
+    </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDVT"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDVT" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Đơn vị</span>
         </a>
@@ -54,8 +52,7 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNCC"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNCC" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Nhà Cung Cấp</span>
         </a>
@@ -68,8 +65,7 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseT"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseT" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Hàng Hóa</span>
         </a>
@@ -82,8 +78,7 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNV"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNV" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Nhân viên</span>
         </a>
@@ -110,8 +105,7 @@
         </div>
     </li> -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKH"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKH" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Khách hàng</span>
         </a>
@@ -124,8 +118,7 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-           aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Nhập hàng</span>
         </a>
@@ -140,13 +133,11 @@
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-           aria-expanded="true" aria-controls="collapseUtilities">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-fw fa-wrench"></i>
             <span>Xuất hàng</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-             data-parent="#accordionSidebar">
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Custom Utilities:</h6>
                 <a class="collapse-item" href="?controller=donban">Danh sách đơn</a>

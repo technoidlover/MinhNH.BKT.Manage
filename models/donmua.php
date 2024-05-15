@@ -31,11 +31,14 @@ class DonMua{
     static function find($id)
     {
         $db = DB::getInstance();
-        $req = $db->prepare('SELECT db.Id ,db.NgayMua , nv.TaiKhoan ,kh.TenNCC ,db.ThanhTien,db.TrangThai FROM DonMua db JOIN NhanVien nv JOIN NhaCungCap kh ON nv.Id =db.IdNV AND kh.Id = db.IdNCC WHERE db.Id = '.$id);
-        $req->execute(array('id' => $id));
+        // Sử dụng placeholder :id cho truy vấn SQL
+        $req = $db->prepare('SELECT db.Id ,db.NgayMua , nv.TaiKhoan ,kh.TenNCC ,db.ThanhTien,db.TrangThai FROM DonMua db JOIN NhanVien nv JOIN NhaCungCap kh ON nv.Id =db.IdNV AND kh.Id = db.IdNCC WHERE db.Id = :id');
+
+        // Pass `:id` as a placeholder in your query above, and execute it with the array mapping `:id` to `$id`.
+        $req->execute(array(':id' => $id));
         $item = $req->fetch();
         if (isset($item['Id'])) {
-            return new DonMua($item['Id'],$item['NgayMua'],$item['TaiKhoan'],$item['TenNCC'],$item['ThanhTien'],$item['TrangThai']);
+            return new DonMua($item['Id'], $item['NgayMua'], $item['TaiKhoan'], $item['TenNCC'], $item['ThanhTien'], $item['TrangThai']);
         }
         return null;
     }

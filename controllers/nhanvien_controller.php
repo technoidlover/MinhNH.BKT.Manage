@@ -11,7 +11,7 @@ class NhanVienController extends BaseController
     
     public function index()
     {
-        if($_SESSION['quyen'] != 'admin' && $_SESSION['quyen'] != 'manage') {
+        if($_SESSION['quyen'] != 'Admin' && $_SESSION['quyen'] != 'Manage') {
             header('location:permisson.php');
         } else {
             $nhanvien = NhanVien::all();
@@ -22,7 +22,7 @@ class NhanVienController extends BaseController
 
     public function insert()
     {
-        if($_SESSION['quyen'] != 'admin' && $_SESSION['quyen'] != 'manage') {
+        if($_SESSION['quyen'] != 'Admin' && $_SESSION['quyen'] != 'Manage') {
             header('location:permisson.php');
         } else {
             $this->render('insert');
@@ -31,7 +31,7 @@ class NhanVienController extends BaseController
 
     public function edit()
     {
-        if($_SESSION['quyen'] != 'admin' && $_SESSION['quyen'] != 'manage') {
+        if($_SESSION['quyen'] != 'Admin' && $_SESSION['quyen'] != 'Manage') {
             header('location:permisson.php');
         } else {
             $nhanvien = NhanVien::find($_GET['id']);

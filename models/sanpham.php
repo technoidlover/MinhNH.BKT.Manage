@@ -32,7 +32,8 @@ class SanPham
     static function find($id)
     {
         $db = DB::getInstance();
-        $req = $db->prepare('SELECT * FROM SanPham WHERE Id ='.$id);
+        // Sử dụng placeholder :id trong câu truy vấn
+        $req = $db->prepare('SELECT * FROM SanPham WHERE Id = :id');
         $req->execute(array('id' => $id));
         $item = $req->fetch();
         if (isset($item['Id'])) {

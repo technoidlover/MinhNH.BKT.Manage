@@ -48,6 +48,7 @@ if(isset($_POST['edit-kh'])){
 //    $taikhoan= $_POST['taikhoan'];
 //    $matkhau= $_POST['matkhau'];
     $isactive= $_POST['isactive'];
-    NhanVien::update($id,$ten,$sdt,$email,$diachi,$isactive);
+    NhanVien::
+    update($taikhoan, $matkhau, $quyen, $isactive, $tennv, $dienthoai, $email, $diachi);
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
 require_once('connection.php');
 ?>
-<form method="post" action="insert.php" name="create-nv">
+<form method="post" name="create-nv">
     <div class="form-group ml-5">
         <div class="col-md-4 mb-3">
             <label for="validationDefault01">Tên Nhân viên</label>
