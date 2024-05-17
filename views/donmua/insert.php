@@ -19,7 +19,7 @@ $list1 = [];
 $db1 = DB::getInstance();
 $reg1 = $db1->query('select * from NhaCungCap');
 foreach ($reg1->fetchAll() as $item) {
-    $list1[] = new NhaCungCap($item['Id'], $item['TenNCC'], $item['DienThoai'], $item['Email'], $item['DiaChi'], $item['NguoiLienHe']);
+    $list1[] = new NhaCungCap($item['Id'], $item['TenNCC'], $item['DienThoai'], $item['Email'], $item['DiaChi'], $item['NguoiLienHe'], $item['MST']);
 }
 //$data1 =array('khachhang'=> $list1);
 //end load nhan vien

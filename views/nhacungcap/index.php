@@ -15,57 +15,60 @@ require_once('models/nhacungcap.php');
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nhà cung cấp</th>
-                    <th>Người liên hệ</th>
-                    <th>Điện thoại</th>
-                    <th>Email</th>
-                    <th>Địa chỉ</th>
-                    <th>Hành động</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Người liên hệ</th>
+                        <th>Điện thoại</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th>MST</th> <!-- Đã thêm cột MST -->
+                        <th>Hành động</th>
+                    </tr>
                 </thead>
                 <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Nhà cung cấp</th>
-                    <th>Người liên hệ</th>
-                    <th>Điện thoại</th>
-                    <th>Email</th>
-                    <th>Địa chỉ</th>
-                    <th>Hành động</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Người liên hệ</th>
+                        <th>Điện thoại</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th>MST</th> <!-- Đã thêm cột MST -->
+                        <th>Hành động</th>
+                    </tr>
                 </tfoot>
                 <tbody>
 
-                <?php
-                foreach ($nhacungcap as $item){
-                    ?>
-                    <form method="post">
-                        <tr>
-                            <td><?= $item->Id   ?></td>
-                            <td><?= $item->TenNCC?></td>
-                            <td><?= $item->NguoiLienHe?></td>
-                            <td><?= $item->DienThoai?></td>
-                            <td><?= $item->Email?></td>
-                            <td><?= $item->DiaChi?></td>
-                            <td>
-                                <a  href="index.php?controller=nhacungcap&action=edit&id=<?= $item->Id?>"  class='btn btn-primary mr-3'>Sửa</a>
-                                <button type="submit" name="dele" value="<?= $item->Id ?>"    class='btn btn-danger'>Xóa</button>
-                    </form>
-                    </td>
-                    </tr>
                     <?php
-                }
-                ?>
+                    foreach ($nhacungcap as $item) {
+                    ?>
+                        <form method="post">
+                            <tr>
+                                <td><?= $item->Id ?></td>
+                                <td><?= $item->TenNCC ?></td>
+                                <td><?= $item->NguoiLienHe ?></td>
+                                <td><?= $item->DienThoai ?></td>
+                                <td><?= $item->Email ?></td>
+                                <td><?= $item->DiaChi ?></td>
+                                <td><?= $item->MST ?></td> <!-- Hiển thị MST -->
+                                <td>
+                                    <a href="index.php?controller=nhacungcap&action=edit&id=<?= $item->Id ?>" class='btn btn-primary mr-3'>Sửa</a>
+                                    <button type="submit" name="dele" value="<?= $item->Id ?>" class='btn btn-danger'>Xóa</button>
+                                </td>
+                            </tr>
+                        </form>
+                    <?php
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <?php
-if(isset($_POST['dele'])){
-    $id =$_POST['dele'];
+if (isset($_POST['dele'])) {
+    $id = $_POST['dele'];
     NhaCungCap::delete($id);
 }
 ?>

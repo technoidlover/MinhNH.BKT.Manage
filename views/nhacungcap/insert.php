@@ -20,17 +20,22 @@
             <label for="validationDefault05">Người Liên Hệ</label>
             <input type="text" class="form-control" id="validationDefault05" name="nguoilienhe" placeholder="Tên Người Liên Hệ" required>
         </div>
+        <div class="col-md-4 mb-3">
+            <label for="validationDefault05">MST</label>
+            <input type="text" class="form-control" id="validationDefault06" name="MST" placeholder="MST" required>
+        </div>
         <button type="submit" name="create-ncc" class="mt-2 btn-danger btn">Thêm</button>
     </div>
 </form>
 <?php
-if(isset($_POST['create-ncc'])){
+if (isset($_POST['create-ncc'])) {
     $ten = $_POST["tenkh"];
     $sdt = $_POST["sdt"];
     $email = $_POST["email"];
     $diachi = $_POST["diachi"];
-    $nguoilienhe = $_POST["nguoilienhe"];  // Lấy dữ liệu từ form
+    $nguoilienhe = $_POST["nguoilienhe"];
+    $MST = $_POST["MST"];
     // Gọi hàm add của class NhaCungCap với đúng số lượng tham số
-    NhaCungCap::add($ten, $sdt, $email, $diachi, $nguoilienhe);
+    NhaCungCap::add($ten, $sdt, $email, $diachi, $nguoilienhe, $MST);
 }
 ?>

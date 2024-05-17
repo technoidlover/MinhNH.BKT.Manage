@@ -27,7 +27,7 @@ $sp = [];
 $db_sp = DB::getInstance();
 $reg_sp = $db_sp->query('SELECT sp.Id,sp.TenSP,dvt.DonVi,ncc.TenNCC,sp.GiaMua,sp.GiaBan,sp.SoLuong FROM SanPham sp JOIN DonViTinh dvt JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id AND sp.IdDVT = dvt.Id');
 foreach ($reg_sp->fetchAll() as $item) {
-    $sp[] = new SanPham($item['Id'], $item['TenSP'], $item['DonVi'], $item['TenNCC'], $item['GiaMua'], $item['GiaBan'], $item['SoLuong']);
+    $sp[] = new SanPham($item['Id'], $item['TenSP'], $item['DonVi'], $item['TenNCC'], $item['GiaMua'], $item['GiaBan'], $item['SoLuong'],$item['HangSX'], $item['XuatXu'], $item['MoTa'], $item['NhomTB']);
 }
 
 ?>
