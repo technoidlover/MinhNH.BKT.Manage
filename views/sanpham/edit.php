@@ -1,6 +1,7 @@
 <?php
 require_once('models/donvitinh.php');
 require_once('models/nhacungcap.php');
+
 $list = [];
 $db = DB::getInstance();
 $reg = $db->query('select * from DonViTinh');
@@ -9,7 +10,6 @@ foreach ($reg->fetchAll() as $item) {
 }
 $data = array('donvi' => $list);
 
-//end dvt
 $list1 = [];
 $db1 = DB::getInstance();
 $reg1 = $db1->query('select * from NhaCungCap');
@@ -18,7 +18,7 @@ foreach ($reg1->fetchAll() as $item) {
 }
 $data1 = array('nhacungcap' => $list1);
 ?>
-<form method="post" name="create-sp">
+<form method="post" name="edit-sp" enctype="multipart/form-data">
     <div class="form-group ml-5">
         <div class="col-md-4 mb-3">
             <label for="validationDefault01">Tên Sản Phẩm</label>
@@ -37,7 +37,7 @@ $data1 = array('nhacungcap' => $list1);
             </select>
         </div>
         <div class="col-md-4 mb-3">
-            <label for="validationDefault02">Đơn Vị tính</label>
+            <label for="validationDefault02">Nhà cung cấp</label>
             <select class="form-control" id="lsp_ma" name="ncc">
                 <?php foreach ($list1 as $item) {
                     if ($sanpham->IdNCC == $item->Id) {
@@ -76,15 +76,16 @@ $data1 = array('nhacungcap' => $list1);
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Nhóm thiết bị</label>
             <input type="text" class="form-control" id="validationDefault02" value="<?= $sanpham->NhomTB ?>" name="nhomtb" placeholder="Nhập nhóm thiết bị" required>
-            <button type="submit" name="create-sp" class=" mt-2 btn-danger btn">Update</button>
-
         </div>
-
-
+        <div class="col-md-4 mb-3">
+            <label for="validationDefault02">Hình ảnh</label>
+            <input type="file" class="form-control" id="validationDefault02" name="imgUrl" accept="image/*">
+        </div>
+        <button type="submit" name="edit-sp" class="mt-2 btn-danger btn">Update</button>
     </div>
 </form>
 <?php
-if (isset($_POST['create-sp'])) {
+if (isset($_POST['edit-sp'])) {
     $ten = $_POST["tensp"];
     $id = $sanpham->Id;
     $dvt = $_POST["dvt"];
@@ -92,12 +93,19 @@ if (isset($_POST['create-sp'])) {
     $giamua = $_POST["giamua"];
     $giaban = $_POST["giaban"];
     $soluong = $_POST["soluong"];
-
     $HangSX = $_POST["hangsx"] ?? '';
     $XuatXu = $_POST["xuatxu"] ?? '';
     $MoTa = $_POST["mota"] ?? '';
     $NhomTB = $_POST["nhomtb"] ?? '';
 
-    SanPham::update($id, $ten, $dvt, $ncc, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB);
+    // Handle file upload
+    if (isset($_FILES['imgUrl']) && $_FILES['imgUrl']['error'] == 0) {
+        $imgUrl = SanPham::handleFileUpload($_FILES['imgUrl']);
+    } else {
+        // If no new image is uploaded, keep the existing image
+        $imgUrl = $sanpham->imgUrl;
+    }
+
+    SanPham::update($id, $ten, $dvt, $ncc, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB, $imgUrl);
 }
 ?>

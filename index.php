@@ -3,6 +3,8 @@ require_once('connection.php');
 session_start();
 if (!isset($_SESSION['username'])){
    header('location:login.php');
+//    get id username in session 
+
 }
 
 

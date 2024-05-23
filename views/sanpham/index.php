@@ -64,6 +64,7 @@ $sanpham = SanPham::all(); // Giả định là bạn đã lấy danh sách sả
                                 <td><?= $item->MoTa ?></td>
                                 <td><?= $item->NhomTB ?></td>
                                 <td>
+                                    <a href="index.php?controller=sanpham&action=view&id=<?= $item->Id ?>" class='btn btn-primary mr-3'>Chi tiết</a>
                                     <a href="index.php?controller=sanpham&action=edit&id=<?= $item->Id ?>" class='btn btn-primary mr-3'>Sửa</a>
                                     <button type="submit" name="dele" value="<?= $item->Id ?>" class='btn btn-danger'>Xóa</button>
                         </form>

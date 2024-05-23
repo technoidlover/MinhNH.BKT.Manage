@@ -53,11 +53,23 @@ require_once ('models/donmua.php');
                             <td><?= $item->IdNCC?></td>
                             <td><?= number_format($item->ThanhTien, 0,"." , ",")?> VNĐ</td>
                             <td><?php
-                                if ($item->TrangThai=="1"){
-                                    echo "Đã Thanh Toán";
+                                if ($item->TrangThai=="0"){
+                                    echo "Mới tạo";
+                                } 
+                                else if ($item->TrangThai == "1") {
+                                    echo "Đang xử lí";
                                 }
-                                else {
+                                else if ($item->TrangThai == "2") {
                                     echo "Chưa thanh toán";
+                                }
+                                else if ($item->TrangThai == "3") {
+                                    echo "Đã thanh toán";
+                                }
+                                else if ($item->TrangThai == "4") {
+                                    echo "Đã hoàn thành";
+                                }
+                                else if ($item->TrangThai == "5") {
+                                    echo "Đã hủy";
                                 }
                                 ?></td>
                             <td><!--<a  href="index.php?controller=khachhangs&action=showPost&id=--><!--"  class='btn btn-primary mr-3'>Details</a>-->

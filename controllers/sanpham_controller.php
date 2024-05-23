@@ -24,4 +24,10 @@ class SanPhamController extends BaseController
         $data = array('sanpham'=>$sanpham);
         $this->render('edit', $data);
     }
+    public function view ()
+    {
+        $sanpham = SanPham::find($_GET['id']);
+        $data = array('sanpham'=>$sanpham);
+        $this->render('view', $data);
+    }
 }

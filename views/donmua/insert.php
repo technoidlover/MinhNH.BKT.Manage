@@ -5,6 +5,14 @@ require_once('models/nhanvien.php');
 require_once('models/donvitinh.php');
 require_once('models/donmua.php');
 require_once('models/chitietmua.php');
+if (!isset($_SESSION['username']) || !isset($_SESSION['id'])) {
+    header('location:login.php'); // Kiểm tra xem người dùng đã đăng nhập chưa
+    exit();
+}
+
+$nhanvienId = $_SESSION['id']; // Lấy ID nhân viên từ session
+$username = $_SESSION['username']; // Tên đăng nhập của nhân viên
+
 
 $list = [];
 $db = DB::getInstance();
@@ -62,21 +70,13 @@ foreach ($reg_sp->fetchAll() as $item) {
                 <div class="form-group col-md-4 ml-5">
                     <label for="validationDefault02">Trạng thái</label>
                     <select class="form-control" name="trangthai">
-                        <option value="">Chọn trạng thái</option>
-                        <option value="1">Đã thanh toán</option>
-                        <option value="0">Chưa thanh toán</option>
+                        <option value="0" readonly>Mới tạo</option>
                     </select>
                 </div>
                 <div class="form-group col-md-2 ml-5">
                     <label for="validationDefault02">Nhân viên</label>
-                    <select class="form-control" name="nhanvien">
-                        <option value="">Chọn nhân viên</option>
-                        <?php
-                        foreach ($list as $item) {
-                            echo "<option value='{$item->Id}'>{$item->TaiKhoan}</option>";
-                        }
-                        ?>
-                    </select>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($username); ?>" readonly>
+                    <input type="hidden" name="nhanvien" value="<?= htmlspecialchars($nhanvienId); ?>">
                 </div>
 
             </div>

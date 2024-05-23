@@ -81,6 +81,8 @@ if (isset($_POST['login'])){
        
        $_SESSION['username'] = $name;
        $_SESSION['quyen'] = $nhanVien->Quyen;
+       //session id 
+         $_SESSION['id'] = $nhanVien->Id;
        header('location:index.php');
     } else {
        echo  "<h2 class='text-center text-danger'>Tài khoản hoặc mật khẩu không đúng</h2>";

@@ -18,7 +18,7 @@ foreach ($reg1->fetchAll() as $item) {
 }
 $data1 = array('nhacungcap' => $list1);
 ?>
-<form method="post" name="create-sp">
+<form method="post" name="create-sp" enctype="multipart/form-data">
     <div class="form-group ml-5">
         <div class="col-md-4 mb-3">
             <label for="validationDefault01">Tên Sản Phẩm</label>
@@ -69,10 +69,18 @@ $data1 = array('nhacungcap' => $list1);
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Nhóm thiết bị</label>
             <input type="text" class="form-control" id="validationDefault02" name="nhomtb" placeholder="Nhập nhóm thiết bị" required>
-            <button type="submit" name="create-sp" class=" mt-2 btn-danger btn">Thêm</button>
         </div>
+
+        <!-- Thêm phần upload hình ảnh -->
+        <div class="col-md-4 mb-3">
+            <label for="validationDefault02">Hình ảnh sản phẩm</label>
+            <input type="file" class="form-control" id="validationDefault02" name="productImage" required>
+        </div>
+
+        <button type="submit" name="create-sp" class="mt-2 btn-danger btn">Thêm</button>
     </div>
 </form>
+
 <?php
 if (isset($_POST['create-sp'])) {
     $ten = $_POST["tensp"];
@@ -81,13 +89,18 @@ if (isset($_POST['create-sp'])) {
     $giamua = $_POST["giamua"];
     $giaban = $_POST["giaban"];
     $soluong = $_POST["soluong"];
-    // Bổ sung các tham số mới nếu có
     $HangSX = $_POST["hangsx"];
     $XuatXu = $_POST["xuatxu"];
     $MoTa = $_POST["mota"];
     $NhomTB = $_POST["nhomtb"];
 
-    // Gọi method `add` với đủ tham số mới
-    SanPham::add($ten, $dvt, $ncc, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB);
+    // Handle the file upload
+    $imgUrl = null;
+    if (isset($_FILES["productImage"]) && $_FILES["productImage"]["error"] == 0) {
+        $imgUrl = SanPham::handleFileUpload($_FILES["productImage"]);
+    }
+
+    // Gọi method `add` với đủ tham số mới, bao gồm cả URL hình ảnh
+    SanPham::add($ten, $dvt, $ncc, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB, $imgUrl);
 }
 ?>

@@ -1,5 +1,6 @@
 <?php
-class DonMua{
+class DonMua
+{
 
     public $Id;
     public $NgayMua;
@@ -9,22 +10,22 @@ class DonMua{
     public $TrangThai;
 
 
-    function __construct($Id,$NgayMua,$IdNV,$IdNCC,$ThanhTien,$TrangThai)
+    function __construct($Id, $NgayMua, $IdNV, $IdNCC, $ThanhTien, $TrangThai)
     {
         $this->Id = $Id;
         $this->NgayMua = $NgayMua;
         $this->IdNV =  $IdNV;
         $this->IdNCC = $IdNCC;
-        $this->ThanhTien= $ThanhTien;
-        $this->TrangThai= $TrangThai;
+        $this->ThanhTien = $ThanhTien;
+        $this->TrangThai = $TrangThai;
     }
     static function all()
     {
-        $list =[];
-        $db =DB::getInstance();
+        $list = [];
+        $db = DB::getInstance();
         $reg = $db->query('SELECT db.Id ,db.NgayMua , nv.TaiKhoan ,kh.TenNCC ,db.ThanhTien,db.TrangThai FROM DonMua db JOIN NhanVien nv JOIN NhaCungCap kh ON nv.Id =db.IdNV AND kh.Id = db.IdNCC');
-        foreach ($reg->fetchAll() as $item){
-            $list[] =new DonMua($item['Id'],$item['NgayMua'],$item['TaiKhoan'],$item['TenNCC'],$item['ThanhTien'],$item['TrangThai']);
+        foreach ($reg->fetchAll() as $item) {
+            $list[] = new DonMua($item['Id'], $item['NgayMua'], $item['TaiKhoan'], $item['TenNCC'], $item['ThanhTien'], $item['TrangThai']);
         }
         return $list;
     }
@@ -42,28 +43,27 @@ class DonMua{
         }
         return null;
     }
-    static function add($ngayban,$IdNV,$IdNCC,$Tong,$TrangThai)
+    static function add($ngayban, $IdNV, $IdNCC, $Tong, $TrangThai)
     {
-        $db =DB::getInstance();
-        $reg =$db->query('INSERT INTO DonMua(NgayMua,IdNV,IdNCC,ThanhTien,TrangThai) VALUES ("'.$ngayban.'",'.$IdNV.','.$IdNCC.','.$Tong.',"'.$TrangThai.'")');
-
+        $db = DB::getInstance();
+        $reg = $db->query('INSERT INTO DonMua(NgayMua,IdNV,IdNCC,ThanhTien,TrangThai) VALUES ("' . $ngayban . '",' . $IdNV . ',' . $IdNCC . ',' . $Tong . ',"' . $TrangThai . '")');
     }
 
     static function  thanhtoan($id)
     {
         $db = DB::getInstance();
-        $reg =$db->query('UPDATE DonMua SET TrangThai ="1" WHERE Id='.$id);
+        $reg = $db->query('UPDATE DonMua SET TrangThai ="1" WHERE Id=' . $id);
     }
     static function  chuathanhtoan($id)
     {
         $db = DB::getInstance();
-        $reg =$db->query('UPDATE DonMua SET TrangThai ="0" WHERE Id='.$id);
+        $reg = $db->query('UPDATE DonMua SET TrangThai ="0" WHERE Id=' . $id);
     }
     static function delete($id)
     {
-        $db =DB::getInstance();
-        $reg =$db->query('DELETE FROM ChiTietMua WHERE IdDonMua='.$id);
-        $reg1 =$db->query('DELETE FROM DonMua WHERE Id = '.$id);
+        $db = DB::getInstance();
+        $reg = $db->query('DELETE FROM ChiTietMua WHERE IdDonMua=' . $id);
+        $reg1 = $db->query('DELETE FROM DonMua WHERE Id = ' . $id);
         header('location:index.php?controller=donmua&action=index');
     }
 }
