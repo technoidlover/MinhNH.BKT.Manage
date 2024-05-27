@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 13, 2024 lúc 05:12 AM
+-- Thời gian đã tạo: Th5 27, 2024 lúc 03:38 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -41,8 +41,7 @@ CREATE TABLE `chitietban` (
 -- Đang đổ dữ liệu cho bảng `chitietban`
 --
 
-INSERT INTO `chitietban` (`Id`, `IdDonBan`, `IdSP`, `GiaMua`, `GiaBan`, `SoLuong`, `ThanhTien`) VALUES
-(1, 2, 2, 0, 200000, 300, 60000000);
+
 
 -- --------------------------------------------------------
 
@@ -60,6 +59,11 @@ CREATE TABLE `chitietmua` (
   `ThanhTien` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `chitietmua`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -76,8 +80,6 @@ CREATE TABLE `danhsachquyen` (
 -- Đang đổ dữ liệu cho bảng `danhsachquyen`
 --
 
-INSERT INTO `danhsachquyen` (`Id`, `IdNV`, `IdQuyen`) VALUES
-(1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -98,8 +100,6 @@ CREATE TABLE `donban` (
 -- Đang đổ dữ liệu cho bảng `donban`
 --
 
-INSERT INTO `donban` (`Id`, `NgayBan`, `IdNV`, `IdKH`, `Tong`, `TrangThai`) VALUES
-(2, '2024-05-09 08:39:00', 1, 1, 60000000, '0');
 
 -- --------------------------------------------------------
 
@@ -116,6 +116,11 @@ CREATE TABLE `donmua` (
   `TrangThai` varchar(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `donmua`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -131,9 +136,6 @@ CREATE TABLE `donvitinh` (
 -- Đang đổ dữ liệu cho bảng `donvitinh`
 --
 
-INSERT INTO `donvitinh` (`Id`, `DonVi`) VALUES
-(4, 'Cái'),
-(5, 'Hộp');
 
 -- --------------------------------------------------------
 
@@ -153,8 +155,6 @@ CREATE TABLE `khachhang` (
 -- Đang đổ dữ liệu cho bảng `khachhang`
 --
 
-INSERT INTO `khachhang` (`Id`, `TenKH`, `DienThoai`, `Email`, `DiaChi`) VALUES
-(1, 'BKT Sample', '0395342134 ', 'BKT_Customer@bkt.com.vn', 'Hà Nội');
 
 -- --------------------------------------------------------
 
@@ -165,17 +165,17 @@ INSERT INTO `khachhang` (`Id`, `TenKH`, `DienThoai`, `Email`, `DiaChi`) VALUES
 CREATE TABLE `nhacungcap` (
   `Id` int(11) NOT NULL,
   `TenNCC` varchar(100) DEFAULT NULL,
+  `NguoiLienHe` varchar(200) DEFAULT NULL,
   `DienThoai` varchar(20) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
-  `DiaChi` varchar(100) DEFAULT NULL
+  `DiaChi` varchar(100) DEFAULT NULL,
+  `MST` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `nhacungcap`
 --
 
-INSERT INTO `nhacungcap` (`Id`, `TenNCC`, `DienThoai`, `Email`, `DiaChi`) VALUES
-(1, 'Demo', '0123123123', 'demo@gmail.com', 'HN');
 
 -- --------------------------------------------------------
 
@@ -199,10 +199,6 @@ CREATE TABLE `nhanvien` (
 -- Đang đổ dữ liệu cho bảng `nhanvien`
 --
 
-INSERT INTO `nhanvien` (`Id`, `TenNV`, `DienThoai`, `Email`, `DiaChi`, `TaiKhoan`, `MatKhau`, `Quyen`, `IsActive`) VALUES
-(1, 'BKT.ADMIN', '0123412341', 'admin@bkt.vn', 'HN', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin', '1'),
-(2, 'user', '0123456789', 'user@user.com', 'HN', 'user', '21232f297a57a5a743894a0e4a801fc3', 'manage', '1'),
-(3, 'user2', '0123123123', 'user2@user2.vn', 'HN', 'user2', '7e58d63b60197ceb55a1c487989a3720', 'user', '1');
 
 -- --------------------------------------------------------
 
@@ -219,9 +215,6 @@ CREATE TABLE `quyen` (
 -- Đang đổ dữ liệu cho bảng `quyen`
 --
 
-INSERT INTO `quyen` (`Id`, `TenQuyen`) VALUES
-(1, 'admin'),
-(2, 'user');
 
 -- --------------------------------------------------------
 
@@ -231,20 +224,24 @@ INSERT INTO `quyen` (`Id`, `TenQuyen`) VALUES
 
 CREATE TABLE `sanpham` (
   `Id` int(11) NOT NULL,
+  `MaSP` varchar(50) DEFAULT NULL,
   `TenSP` varchar(100) DEFAULT NULL,
   `IdDVT` int(11) DEFAULT NULL,
   `IdNCC` int(11) DEFAULT NULL,
+  `HangSX` varchar(50) DEFAULT NULL,
+  `XuatXu` varchar(50) DEFAULT NULL,
+  `NhomTB` varchar(50) DEFAULT NULL,
+  `MoTa` varchar(8000) DEFAULT NULL,
   `GiaMua` int(11) DEFAULT NULL,
   `GiaBan` int(11) DEFAULT NULL,
-  `SoLuong` int(11) DEFAULT NULL
+  `SoLuong` int(11) DEFAULT NULL,
+  `imgUrl` varchar(8000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `sanpham`
 --
 
-INSERT INTO `sanpham` (`Id`, `TenSP`, `IdDVT`, `IdNCC`, `GiaMua`, `GiaBan`, `SoLuong`) VALUES
-(2, 'Demo', 4, 1, 100000, 200000, 0);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -336,13 +333,13 @@ ALTER TABLE `sanpham`
 -- AUTO_INCREMENT cho bảng `chitietban`
 --
 ALTER TABLE `chitietban`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `chitietmua`
 --
 ALTER TABLE `chitietmua`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT cho bảng `danhsachquyen`
@@ -354,37 +351,37 @@ ALTER TABLE `danhsachquyen`
 -- AUTO_INCREMENT cho bảng `donban`
 --
 ALTER TABLE `donban`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `donmua`
 --
 ALTER TABLE `donmua`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT cho bảng `donvitinh`
 --
 ALTER TABLE `donvitinh`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT cho bảng `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `nhacungcap`
 --
 ALTER TABLE `nhacungcap`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT cho bảng `quyen`
@@ -396,7 +393,7 @@ ALTER TABLE `quyen`
 -- AUTO_INCREMENT cho bảng `sanpham`
 --
 ALTER TABLE `sanpham`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

@@ -1,5 +1,9 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+    <style>
+        span {
+            color: white;
+        }
+    </style>
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/MinhNH.BKT.Manage">
         <img src="./Assets/img/logo.png" alt="" style="height: 190%; margin-left: -5%;">
@@ -10,7 +14,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="/MinhNH.BKT.Manage">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -67,7 +71,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseT" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Hàng Hóa</span>
+            <span>Sản phẩm</span>
         </a>
         <div id="collapseT" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
