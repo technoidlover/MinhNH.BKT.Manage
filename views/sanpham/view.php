@@ -1,24 +1,35 @@
 <?php
+require_once('models/sanpham.php');
 require_once('models/donvitinh.php');
 require_once('models/nhacungcap.php');
+require_once('models/hangsx.php');
+require_once('models/nhomtb.php');
+
+// Lấy sản phẩm theo ID
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $sanpham = SanPham::find($id);
+
+    if (!$sanpham) {
+        echo "Sản phẩm không tồn tại.";
+        exit;
+    }
+} else {
+    echo "Chưa có ID sản phẩm trong yêu cầu.";
+    exit;
+}
 
 // Lấy dữ liệu cho select Đơn vị tính
-$list = [];
-$db = DB::getInstance();
-$reg = $db->query('select * from DonViTinh');
-foreach ($reg->fetchAll() as $item) {
-    $list[] = new DonViTinh($item['Id'], $item['DonVi']);
-}
-$data = array('donvi' => $list);
+$listDVT = DonViTinh::all();
 
-//end dvt, lấy dữ liệu cho select Nhà cung cấp
-$list1 = [];
-$db1 = DB::getInstance();
-$reg1 = $db1->query('select * from NhaCungCap');
-foreach ($reg1->fetchAll() as $item) {
-    $list1[] = new NhaCungCap($item['Id'], $item['TenNCC'], $item['DienThoai'], $item['Email'], $item['DiaChi'], $item['NguoiLienHe'], $item['MST']);
-}
-$data1 = array('nhacungcap' => $list1);
+// Lấy dữ liệu cho select Nhà cung cấp
+$listNCC = NhaCungCap::all();
+
+// Lấy dữ liệu cho select Hãng sản xuất
+$listHSX = HangSX::all();
+
+// Lấy dữ liệu cho select Nhóm thiết bị
+$listNTB = NhomTB::all();
 ?>
 
 <div class="container mt-5">
@@ -35,18 +46,20 @@ $data1 = array('nhacungcap' => $list1);
                     <h4 class="card-title"><?= $sanpham->TenSP ?></h4>
                     <p class="card-text"><strong>Đơn Vị Tính: </strong>
                         <?php
-                        foreach ($list as $item) {
+                        foreach ($listDVT as $item) {
                             if ($sanpham->IdDVT == $item->Id) {
                                 echo $item->DonVi;
+                                break;
                             }
                         }
                         ?>
                     </p>
                     <p class="card-text"><strong>Nhà Cung Cấp: </strong>
                         <?php
-                        foreach ($list1 as $item) {
+                        foreach ($listNCC as $item) {
                             if ($sanpham->IdNCC == $item->Id) {
                                 echo $item->TenNCC;
+                                break;
                             }
                         }
                         ?>
@@ -54,10 +67,28 @@ $data1 = array('nhacungcap' => $list1);
                     <p class="card-text"><strong>Giá Mua: </strong><?= number_format($sanpham->GiaMua, 0, ".", ",") ?> VND</p>
                     <p class="card-text"><strong>Giá Bán: </strong><?= number_format($sanpham->GiaBan, 0, ".", ",") ?> VND</p>
                     <p class="card-text"><strong>Số Lượng: </strong><?= $sanpham->SoLuong ?></p>
-                    <p class="card-text"><strong>Hãng Sản Xuất: </strong><?= $sanpham->HangSX ?></p>
+                    <p class="card-text"><strong>Hãng Sản Xuất: </strong>
+                        <?php
+                        foreach ($listHSX as $item) {
+                            if ($sanpham->IdHSX == $item->Id) {
+                                echo $item->TenHang;
+                                break;
+                            }
+                        }
+                        ?>
+                    </p>
                     <p class="card-text"><strong>Xuất Xứ: </strong><?= $sanpham->XuatXu ?></p>
-                    <p class="card-text"><strong>Mô Tả: </strong><?= $sanpham->MoTa ?></p>
-                    <p class="card-text"><strong>Nhóm Thiết Bị: </strong><?= $sanpham->NhomTB ?></p>
+                    <p class="card-text"><strong>Mã Sản Phẩm: </strong><?= $sanpham->MaSP ?></p>
+                    <p class="card-text"><strong>Nhóm Thiết Bị: </strong>
+                        <?php
+                        foreach ($listNTB as $item) {
+                            if ($sanpham->IdNTB == $item->Id) {
+                                echo $item->TenNhom;
+                                break;
+                            }
+                        }
+                        ?>
+                    </p>
                 </div>
             </div>
         </div>

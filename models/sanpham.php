@@ -1,32 +1,41 @@
 <?php
+
 class SanPham
 {
     public $Id;
+    public $MaSP;
     public $TenSP;
-    public $IdDVT;
-    public $IdNCC;
+    public $IdDVT; // Thêm thuộc tính ID
+    public $IdNCC; // Thêm thuộc tính ID
+    public $IdHSX; // Thêm thuộc tính ID
+    public $IdNTB; // Thêm thuộc tính ID
+    public $TenDVT;
+    public $TenNCC;
+    public $TenHSX;
+    public $TenNTB;
+    public $XuatXu;
     public $GiaMua;
     public $GiaBan;
     public $SoLuong;
-    public $HangSX;
-    public $XuatXu;
-    public $MoTa;
-    public $NhomTB;
     public $imgUrl;
 
-    function __construct($Id, $TenSP, $IdDVT, $IdNCC, $GiaMua, $GiaBan, $SoLuong, $HangSX, $XuatXu, $MoTa, $NhomTB, $imgUrl)
+    function __construct($Id, $MaSP, $TenSP, $IdDVT, $TenDVT, $IdNCC, $TenNCC, $IdHSX, $TenHSX, $IdNTB, $TenNTB, $XuatXu, $GiaMua, $GiaBan, $SoLuong, $imgUrl)
     {
         $this->Id = $Id;
+        $this->MaSP = $MaSP;
         $this->TenSP = $TenSP;
-        $this->IdDVT = $IdDVT;
-        $this->IdNCC = $IdNCC;
+        $this->IdDVT = $IdDVT; // Khởi tạo thuộc tính ID
+        $this->TenDVT = $TenDVT;
+        $this->IdNCC = $IdNCC; // Khởi tạo thuộc tính ID
+        $this->TenNCC = $TenNCC;
+        $this->IdHSX = $IdHSX; // Khởi tạo thuộc tính ID
+        $this->TenHSX = $TenHSX;
+        $this->IdNTB = $IdNTB; // Khởi tạo thuộc tính ID
+        $this->TenNTB = $TenNTB;
+        $this->XuatXu = $XuatXu;
         $this->GiaMua = $GiaMua;
         $this->GiaBan = $GiaBan;
         $this->SoLuong = $SoLuong;
-        $this->HangSX = $HangSX;
-        $this->XuatXu = $XuatXu;
-        $this->MoTa = $MoTa;
-        $this->NhomTB = $NhomTB;
         $this->imgUrl = $imgUrl;
     }
 
@@ -34,9 +43,34 @@ class SanPham
     {
         $list = [];
         $db = DB::getInstance();
-        $reg = $db->query('SELECT sp.Id, sp.TenSP, dvt.DonVi, ncc.TenNCC, sp.GiaMua, sp.GiaBan, sp.SoLuong, sp.HangSX, sp.XuatXu, sp.MoTa, sp.NhomTB, sp.imgUrl FROM SanPham sp JOIN DonViTinh dvt JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id AND sp.IdDVT = dvt.Id');
-        foreach ($reg->fetchAll() as $item) {
-            $list[] = new SanPham($item['Id'], $item['TenSP'], $item['DonVi'], $item['TenNCC'], $item['GiaMua'], $item['GiaBan'], $item['SoLuong'], $item['HangSX'], $item['XuatXu'], $item['MoTa'], $item['NhomTB'], $item['imgUrl']);
+        $req = $db->query('
+        SELECT sp.Id, sp.MaSP, sp.TenSP, sp.IdDVT, dvt.DonVi as TenDVT, sp.IdNCC, ncc.TenNCC, sp.IdHSX, hsx.TenHang as TenHSX, sp.IdNTB, ntb.TenNhom as TenNTB, sp.XuatXu, sp.GiaMua, sp.GiaBan, sp.SoLuong, sp.imgUrl
+        FROM SanPham sp
+        LEFT JOIN DonViTinh dvt ON sp.IdDVT = dvt.Id
+        LEFT JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id
+        LEFT JOIN HangSX hsx ON sp.IdHSX = hsx.Id
+        LEFT JOIN NhomThietBi ntb ON sp.IdNTB = ntb.Id
+    ');
+
+        foreach ($req->fetchAll() as $item) {
+            $list[] = new SanPham(
+                $item['Id'],
+                $item['MaSP'],
+                $item['TenSP'],
+                $item['IdDVT'],
+                $item['TenDVT'],
+                $item['IdNCC'],
+                $item['TenNCC'],
+                $item['IdHSX'],
+                $item['TenHSX'],
+                $item['IdNTB'],
+                $item['TenNTB'],
+                $item['XuatXu'],
+                $item['GiaMua'],
+                $item['GiaBan'],
+                $item['SoLuong'],
+                $item['imgUrl']
+            );
         }
         return $list;
     }
@@ -44,77 +78,95 @@ class SanPham
     static function find($id)
     {
         $db = DB::getInstance();
-        $req = $db->prepare('SELECT * FROM SanPham WHERE Id = :id');
-        $req->execute(array('id' => $id));
-        $item = $req->fetch();
-        if (isset($item['Id'])) {
-            return new SanPham($item['Id'], $item['TenSP'], $item['IdDVT'], $item['IdNCC'], $item['GiaMua'], $item['GiaBan'], $item['SoLuong'], $item['HangSX'], $item['XuatXu'], $item['MoTa'], $item['NhomTB'], $item['imgUrl']);
+        $req = $db->prepare('
+        SELECT sp.Id, sp.MaSP, sp.TenSP, sp.IdDVT, dvt.DonVi as TenDVT, sp.IdNCC, ncc.TenNCC, sp.IdHSX, hsx.TenHang as TenHSX, sp.IdNTB, ntb.TenNhom as TenNTB, sp.XuatXu, sp.GiaMua, sp.GiaBan, sp.SoLuong, sp.imgUrl
+        FROM SanPham sp
+        LEFT JOIN DonViTinh dvt ON sp.IdDVT = dvt.Id
+        LEFT JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id
+        LEFT JOIN HangSX hsx ON sp.IdHSX = hsx.Id
+        LEFT JOIN NhomThietBi ntb ON sp.IdNTB = ntb.Id
+        WHERE sp.Id = :id
+    ');
+        $req->execute(['id' => $id]);
+
+        if ($item = $req->fetch()) {
+            return new SanPham(
+                $item['Id'],
+                $item['MaSP'],
+                $item['TenSP'],
+                $item['IdDVT'],
+                $item['TenDVT'],
+                $item['IdNCC'],
+                $item['TenNCC'],
+                $item['IdHSX'],
+                $item['TenHSX'],
+                $item['IdNTB'],
+                $item['TenNTB'],
+                $item['XuatXu'],
+                $item['GiaMua'],
+                $item['GiaBan'],
+                $item['SoLuong'],
+                $item['imgUrl']
+            );
         }
         return null;
     }
 
-    static function add($ten, $IdDVT, $IdNCC, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB, $imgUrl)
+    static function add($MaSP, $TenSP, $IdDVT, $IdNCC, $IdHSX, $IdNTB, $XuatXu, $GiaMua, $GiaBan, $SoLuong, $imgUrl)
     {
         $db = DB::getInstance();
-        $reg = $db->prepare(
-            'INSERT INTO SanPham(TenSP, IdDVT, IdNCC, GiaMua, GiaBan, SoLuong, HangSX, XuatXu, MoTa, NhomTB, imgUrl) 
-            VALUES (:ten, :IdDVT, :IdNCC, :GiaMua, :GiaBan, :SoLuong, :HangSX, :XuatXu, :MoTa, :NhomTB, :imgUrl)'
-        );
-        $reg->execute(array(
-            'ten' => $ten,
+        $req = $db->prepare('INSERT INTO SanPham (MaSP, TenSP, IdDVT, IdNCC, IdHSX, IdNTB, XuatXu, GiaMua, GiaBan, SoLuong, imgUrl) VALUES (:MaSP, :TenSP, :IdDVT, :IdNCC, :IdHSX, :IdNTB, :XuatXu, :GiaMua, :GiaBan, :SoLuong, :imgUrl)');
+
+        return $req->execute(array(
+            'MaSP' => $MaSP,
+            'TenSP' => $TenSP,
             'IdDVT' => $IdDVT,
             'IdNCC' => $IdNCC,
-            'GiaMua' => $giamua,
-            'GiaBan' => $giaban,
-            'SoLuong' => $soluong,
-            'HangSX' => $HangSX,
+            'IdHSX' => $IdHSX,
+            'IdNTB' => $IdNTB,
             'XuatXu' => $XuatXu,
-            'MoTa' => $MoTa,
-            'NhomTB' => $NhomTB,
+            'GiaMua' => $GiaMua,
+            'GiaBan' => $GiaBan,
+            'SoLuong' => $SoLuong,
             'imgUrl' => $imgUrl
         ));
-        header('location:index.php?controller=sanpham&action=index');
     }
-
-    static function update($id, $ten, $IdDVT, $IdNCC, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB, $imgUrl)
+    //updatesl($sp_ma, $sp_dh_soluong);
+    static function updatesl($id, $quantity)
     {
         $db = DB::getInstance();
-        $reg = $db->prepare(
-            'UPDATE SanPham 
-            SET TenSP = :ten, IdDVT = :IdDVT, IdNCC = :IdNCC, GiaMua = :GiaMua, GiaBan = :GiaBan, 
-                SoLuong = :SoLuong, HangSX = :HangSX, XuatXu = :XuatXu, MoTa = :MoTa, NhomTB = :NhomTB, imgUrl = :imgUrl
-            WHERE Id = :id'
-        );
-        $reg->execute(array(
-            'id' => $id,
-            'ten' => $ten,
+        $req = $db->prepare('UPDATE SanPham SET SoLuong = SoLuong - :quantity WHERE Id = :id');
+        $req->execute(array('id' => $id, 'quantity' => $quantity));
+    }
+
+    static function update($Id, $MaSP, $TenSP, $IdDVT, $IdNCC, $IdHSX, $IdNTB, $XuatXu, $GiaMua, $GiaBan, $SoLuong, $imgUrl)
+    {
+        $db = DB::getInstance();
+        $req = $db->prepare('UPDATE SanPham SET MaSP = :MaSP, TenSP = :TenSP, IdDVT = :IdDVT, IdNCC = :IdNCC, IdHSX = :IdHSX, IdNTB = :IdNTB, XuatXu = :XuatXu, GiaMua = :GiaMua, GiaBan = :GiaBan, SoLuong = :SoLuong, imgUrl = :imgUrl WHERE Id = :Id');
+
+        return $req->execute(array(
+            'Id' => $Id,
+            'MaSP' => $MaSP,
+            'TenSP' => $TenSP,
             'IdDVT' => $IdDVT,
             'IdNCC' => $IdNCC,
-            'GiaMua' => $giamua,
-            'GiaBan' => $giaban,
-            'SoLuong' => $soluong,
-            'HangSX' => $HangSX,
+            'IdHSX' => $IdHSX,
+            'IdNTB' => $IdNTB,
             'XuatXu' => $XuatXu,
-            'MoTa' => $MoTa,
-            'NhomTB' => $NhomTB,
+            'GiaMua' => $GiaMua,
+            'GiaBan' => $GiaBan,
+            'SoLuong' => $SoLuong,
             'imgUrl' => $imgUrl
         ));
-        header('location:index.php?controller=sanpham&action=index');
-    }
-
-    static function updatesl($id, $soluong)
-    {
-        $db = DB::getInstance();
-        $reg = $db->query('UPDATE SanPham SET SoLuong = "' . $soluong . '" WHERE Id = ' . $id);
     }
 
     static function delete($id)
     {
         $db = DB::getInstance();
-        $reg = $db->query('DELETE FROM SanPham WHERE Id = ' . $id);
-        header('location:index.php?controller=sanpham&action=index');
-    }
+        $req = $db->prepare('DELETE FROM SanPham WHERE Id = :id');
 
+        return $req->execute(array('id' => $id));
+    }
     static function handleFileUpload($file)
     {
         $targetDir = "Assets/upload/";

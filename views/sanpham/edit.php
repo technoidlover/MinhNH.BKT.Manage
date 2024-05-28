@@ -1,111 +1,123 @@
 <?php
+require_once('models/sanpham.php');
 require_once('models/donvitinh.php');
 require_once('models/nhacungcap.php');
+require_once('models/hangsx.php');
+require_once('models/nhomtb.php');
 
-$list = [];
-$db = DB::getInstance();
-$reg = $db->query('select * from DonViTinh');
-foreach ($reg->fetchAll() as $item) {
-    $list[] = new DonViTinh($item['Id'], $item['DonVi']);
-}
-$data = array('donvi' => $list);
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $sanpham = SanPham::find($id);
 
-$list1 = [];
-$db1 = DB::getInstance();
-$reg1 = $db1->query('select * from NhaCungCap');
-foreach ($reg1->fetchAll() as $item) {
-    $list1[] = new NhaCungCap($item['Id'], $item['TenNCC'], $item['DienThoai'], $item['Email'], $item['DiaChi'], $item['NguoiLienHe'], $item['MST']);
+    if (!$sanpham) {
+        echo "Sản phẩm không tồn tại";
+        exit;
+    }
+} else {
+    echo "Chưa có ID sản phẩm trong yêu cầu.";
+    exit;
 }
-$data1 = array('nhacungcap' => $list1);
+
+// Lấy các danh sách liên quan để hiển thị trong các dropdown
+$listDVT = DonViTinh::all();
+$listNCC = NhaCungCap::all();
+$listHSX = HangSX::all();
+$listNTB = NhomTB::all();
+
 ?>
+
 <form method="post" name="edit-sp" enctype="multipart/form-data">
     <div class="form-group ml-5">
         <div class="col-md-4 mb-3">
             <label for="validationDefault01">Tên Sản Phẩm</label>
-            <input type="text" class="form-control" id="validationDefault01" value="<?= $sanpham->TenSP ?>" name="tensp" placeholder="Tên Sản Phẩm" required>
+            <input type="text" class="form-control" id="validationDefault01" name="tensp" value="<?= $sanpham->TenSP ?>" placeholder="Tên Sản Phẩm" required>
         </div>
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Đơn Vị tính</label>
-            <select class="form-control" id="lsp_ma" name="dvt">
-                <?php foreach ($list as $item) {
-                    if ($sanpham->IdDVT == $item->Id) {
-                        echo "<option value=" . $item->Id . " selected>" . $item->DonVi . "</option>";
-                    } else {
-                        echo "<option value=" . $item->Id . ">" . $item->DonVi . "</option>";
-                    }
+            <select class="form-control" id="dvt" name="dvt">
+                <?php foreach ($listDVT as $item) {
+                    $selected = $item->Id == $sanpham->IdDVT ? "selected" : "";
+                    echo "<option value='{$item->Id}' $selected>{$item->DonVi}</option>";
                 } ?>
             </select>
         </div>
         <div class="col-md-4 mb-3">
-            <label for="validationDefault02">Nhà cung cấp</label>
-            <select class="form-control" id="lsp_ma" name="ncc">
-                <?php foreach ($list1 as $item) {
-                    if ($sanpham->IdNCC == $item->Id) {
-                        echo "<option value=" . $item->Id . " selected>" . $item->TenNCC . "</option>";
-                    } else {
-                        echo "<option value=" . $item->Id . ">" . $item->TenNCC . "</option>";
-                    }
+            <label for="validationDefault02">Nhà Cung Cấp</label>
+            <select class="form-control" id="ncc" name="ncc">
+                <?php foreach ($listNCC as $item) {
+                    $selected = $item->Id == $sanpham->IdNCC ? "selected" : "";
+                    echo "<option value='{$item->Id}' $selected>{$item->TenNCC}</option>";
+                } ?>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="validationDefault02">Hãng sản xuất</label>
+            <select class="form-control" id="hangsx" name="hangsx">
+                <?php foreach ($listHSX as $item) {
+                    $selected = $item->Id == $sanpham->IdHSX ? "selected" : "";
+                    echo "<option value='{$item->Id}' $selected>{$item->TenHang}</option>";
+                } ?>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="validationDefault02">Nhóm thiết bị</label>
+            <select class="form-control" id="nhomtb" name="nhomtb">
+                <?php foreach ($listNTB as $item) {
+                    $selected = $item->Id == $sanpham->IdNTB ? "selected" : "";
+                    echo "<option value='{$item->Id}' $selected>{$item->TenNhom}</option>";
                 } ?>
             </select>
         </div>
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Giá Mua</label>
-            <input type="number" class="form-control" value="<?= $sanpham->GiaMua ?>" id="validationDefault02" name="giamua" placeholder="Nhập giá" required>
+            <input type="number" class="form-control" id="validationDefault02" name="giamua" value="<?= $sanpham->GiaMua ?>" placeholder="Nhập giá" required>
         </div>
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Giá bán</label>
-            <input type="number" class="form-control" id="validationDefault02" value="<?= $sanpham->GiaBan ?>" name="giaban" placeholder="Nhập giá.." required>
+            <input type="number" class="form-control" id="validationDefault02" name="giaban" value="<?= $sanpham->GiaBan ?>" placeholder="Nhập giá.." required>
         </div>
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Số lượng</label>
-            <input type="number" class="form-control" id="validationDefault02" value="<?= $sanpham->SoLuong ?>" name="soluong" placeholder="Nhập số lượng" required>
-        </div>
-        <!-- thêm hãng sx, xuất xứ, mô tả và nhómTB -->
-        <div class="col-md-4 mb-3">
-            <label for="validationDefault02">Hãng sản xuất</label>
-            <input type="text" class="form-control" id="validationDefault02" value="<?= $sanpham->HangSX ?>" name="hangsx" placeholder="Nhập hãng sản xuất" required>
+            <input type="number" class="form-control" id="validationDefault02" name="soluong" value="<?= $sanpham->SoLuong ?>" placeholder="Nhập số lượng" required>
         </div>
         <div class="col-md-4 mb-3">
             <label for="validationDefault02">Xuất xứ</label>
-            <input type="text" class="form-control" id="validationDefault02" value="<?= $sanpham->XuatXu ?>" name="xuatxu" placeholder="Nhập xuất xứ" required>
+            <input type="text" class="form-control" id="validationDefault02" name="xuatxu" value="<?= $sanpham->XuatXu ?>" placeholder="Nhập xuất xứ" required>
         </div>
         <div class="col-md-4 mb-3">
-            <label for="validationDefault02">Mô tả</label>
-            <input type="text" class="form-control" id="validationDefault02" value="<?= $sanpham->MoTa ?>" name="mota" placeholder="Nhập mô tả" required>
+            <label for="validationDefault02">Mã Sản Phẩm</label>
+            <input type="text" class="form-control" id="validationDefault02" name="masp" value="<?= $sanpham->MaSP ?>" placeholder="Nhập Mã SP" required>
         </div>
         <div class="col-md-4 mb-3">
-            <label for="validationDefault02">Nhóm thiết bị</label>
-            <input type="text" class="form-control" id="validationDefault02" value="<?= $sanpham->NhomTB ?>" name="nhomtb" placeholder="Nhập nhóm thiết bị" required>
+            <label for="validationDefault02">Hình ảnh sản phẩm</label>
+            <input type="file" class="form-control" id="validationDefault02" name="productImage">
+            <img src="<?= $sanpham->imgUrl ?>" alt="Product Image" width="100">
         </div>
-        <div class="col-md-4 mb-3">
-            <label for="validationDefault02">Hình ảnh</label>
-            <input type="file" class="form-control" id="validationDefault02" name="imgUrl" accept="image/*">
-        </div>
-        <button type="submit" name="edit-sp" class="mt-2 btn-danger btn">Update</button>
+        <button type="submit" name="edit-sp" class="mt-2 btn-danger btn">Cập nhật</button>
     </div>
 </form>
+
 <?php
 if (isset($_POST['edit-sp'])) {
-    $ten = $_POST["tensp"];
-    $id = $sanpham->Id;
-    $dvt = $_POST["dvt"];
-    $ncc = $_POST["ncc"];
-    $giamua = $_POST["giamua"];
-    $giaban = $_POST["giaban"];
-    $soluong = $_POST["soluong"];
-    $HangSX = $_POST["hangsx"] ?? '';
-    $XuatXu = $_POST["xuatxu"] ?? '';
-    $MoTa = $_POST["mota"] ?? '';
-    $NhomTB = $_POST["nhomtb"] ?? '';
+    $MaSP = $_POST["masp"];
+    $TenSP = $_POST["tensp"];
+    $IdDVT = $_POST["dvt"];
+    $IdNCC = $_POST["ncc"];
+    $IdHSX = $_POST["hangsx"];
+    $IdNTB = $_POST["nhomtb"];
+    $XuatXu = $_POST["xuatxu"];
+    $GiaMua = $_POST["giamua"];
+    $GiaBan = $_POST["giaban"];
+    $SoLuong = $_POST["soluong"];
 
-    // Handle file upload
-    if (isset($_FILES['imgUrl']) && $_FILES['imgUrl']['error'] == 0) {
-        $imgUrl = SanPham::handleFileUpload($_FILES['imgUrl']);
-    } else {
-        // If no new image is uploaded, keep the existing image
-        $imgUrl = $sanpham->imgUrl;
+    // Handle the file upload
+    $imgUrl = $sanpham->imgUrl;  // Giữ đường dẫn hình ảnh hiện tại
+    if (isset($_FILES["productImage"]) && $_FILES["productImage"]["error"] == 0) {
+        $imgUrl = SanPham::handleFileUpload($_FILES["productImage"]);
     }
 
-    SanPham::update($id, $ten, $dvt, $ncc, $giamua, $giaban, $soluong, $HangSX, $XuatXu, $MoTa, $NhomTB, $imgUrl);
+    // Gọi method `update` với đủ tham số mới, bao gồm cả URL hình ảnh
+    SanPham::update($sanpham->Id, $MaSP, $TenSP, $IdDVT, $IdNCC, $IdHSX, $IdNTB, $XuatXu, $GiaMua, $GiaBan, $SoLuong, $imgUrl);
+    header('Location: index.php?controller=sanpham');
 }
 ?>

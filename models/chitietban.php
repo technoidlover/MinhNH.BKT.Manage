@@ -42,10 +42,12 @@ class ChiTietBan{
         }
         return $list;
     }
-    static function add($IdDonHang,$IdSP,$GiaMua,$GiaBan,$SoLuong,$ThanhTien)
+    public static function add($IdDon, $sp_ma, $sp_dh_ma, $sp_dh_dongia, $sp_dh_soluong, $thanhtien)
     {
-        $db =DB::getInstance();
-        $reg =$db->query('INSERT INTO ChiTietBan(IdDonBan,IdSP,GiaMua,GiaBan,SoLuong,ThanhTien) VALUES ('.$IdDonHang.','.$IdSP.','.$GiaMua.','.$GiaBan.','.$SoLuong.','.$ThanhTien.')');
+        $db = DB::getInstance(); // Make sure this method returns a valid PDO instance
 
+        $stmt = $db->prepare("INSERT INTO ChiTietBan (IdDonBan, IdSP, GiaMua, GiaBan, SoLuong, ThanhTien) VALUES (?, ?, ?, ?, ?, ?)");
+
+        $stmt->execute([$IdDon, $sp_ma, $sp_dh_ma, $sp_dh_dongia, $sp_dh_soluong, $thanhtien]);
     }
 }

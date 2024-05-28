@@ -14,7 +14,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="/MinhNH.BKT.Manage">
+        <a class="nav-link" href="MinhNH.BKT.Manage">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -52,6 +52,35 @@
                 <h6 class="collapse-header">Action:</h6>
                 <a class="collapse-item" href="?controller=donvitinh">Danh sách</a>
                 <a class="collapse-item" href="?controller=donvitinh&action=insert">Thêm</a>
+            </div>
+        </div>
+    </li>
+    <!-- Nav Item - Hãng sản xuất Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHangSX" aria-expanded="true" aria-controls="collapseHangSX">
+            <i class="fas fa-fw fa-industry"></i>
+            <span>Hãng Sản Xuất</span>
+        </a>
+        <div id="collapseHangSX" class="collapse" aria-labelledby="headingHangSX" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Action:</h6>
+                <a class="collapse-item" href="?controller=hangsx">Danh sách Hãng</a>
+                <a class="collapse-item" href="?controller=hangsx&action=insert">Thêm Hãng</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Nhóm thiết bị Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNhomTB" aria-expanded="true" aria-controls="collapseNhomTB">
+            <i class="fas fa-fw fa-tools"></i>
+            <span>Nhóm Thiết Bị</span>
+        </a>
+        <div id="collapseNhomTB" class="collapse" aria-labelledby="headingNhomTB" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Action:</h6>
+                <a class="collapse-item" href="?controller=nhomtb">Danh sách Nhóm</a>
+                <a class="collapse-item" href="?controller=nhomtb&action=insert">Thêm Nhóm</a>
             </div>
         </div>
     </li>

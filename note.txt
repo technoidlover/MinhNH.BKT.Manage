@@ -1,3 +1,4 @@
 xuất hang: TRẠNG Thái lúc tạo bỏ quá, lúc sửa sẽ có thông tin là đã gửi, đã nhận,chấp nhận, hủy dơn, đang thanh toán, đã thanh toán
 nhân viên: ai đang dung thì lấy ng đấy luôn
 hình ảnh thiết bị, nhập hàng xuất hàng, gộp đơn nhập vào hàng hóa
+nhóm thiết bị trong sản phẩm thành dropdown và có thể nhập để tìm kiếm
