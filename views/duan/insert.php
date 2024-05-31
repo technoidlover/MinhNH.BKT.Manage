@@ -3,8 +3,8 @@ require_once('connection.php');
 require_once('models/khachhang.php');
 require_once('models/nhanvien.php');
 require_once('models/sanpham.php');
-require_once('models/donban.php');
-require_once('models/chitietban.php');
+require_once('models/duan.php');
+require_once('models/chitietduan.php');
 
 // Get all necessary data
 $listNV = NhanVien::all();
@@ -15,7 +15,7 @@ $listSP = SanPham::all();
 <form method="post" name="add">
     <div class="form-group">
         <fieldset style="border-collapse: collapse; border: 1px solid red" class="ml-5 mr-5">
-            <legend class="ml-2">Đơn hàng</legend>
+            <legend class="ml-2">Thêm dự án</legend>
             <div class="form-group ml-5">
                 <div class="col-md-12 mb-3">
                     <label for="khachhang">Khách Hàng</label>
@@ -50,7 +50,6 @@ $listSP = SanPham::all();
                 </div>
             </div>
         </fieldset>
-
         <fieldset style="border-collapse: collapse; border: 1px solid red" class="mt-5 ml-5 mr-5">
             <legend class="ml-2">Chi tiết đơn</legend>
             <div class="form-row ml-4">
@@ -59,7 +58,7 @@ $listSP = SanPham::all();
                     <select class="form-control" id="sp_ma" name="sp_ma[]">
                         <optgroup label="Chọn sản phẩm">
                             <?php foreach ($listSP as $item) : ?>
-                                <option value="<?= htmlspecialchars($item->Id) ?>" data-sp_sl="<?= htmlspecialchars($item->SoLuong) ?>" data-sp_gia="<?= htmlspecialchars($item->GiaBan) ?>"><?= htmlspecialchars($item->TenSP) ?></option>
+                                <option value="<?= htmlspecialchars($item->Id) ?>" data-sp_gia="<?= htmlspecialchars($item->GiaBan) ?>"><?= htmlspecialchars($item->TenSP) ?></option>
                             <?php endforeach; ?>
                         </optgroup>
                     </select>
@@ -89,16 +88,55 @@ $listSP = SanPham::all();
                 </tbody>
             </table>
         </fieldset>
+        <!-- Nút xóa -->
+        <input type="hidden" name="delete_row" id="delete_row" value="">
         <button type="submit" name="add" class="mt-2 ml-5 btn btn-danger">Tạo</button>
-    </div>
 </form>
 
+<script>
+    // Logic thêm sản phẩm vào bảng chi tiết
+    document.getElementById('btnThemSanPham').addEventListener('click', function() {
+        // Lấy thông tin sản phẩm đã chọn
+        var spSelect = document.getElementById('sp_ma');
+        var selectedOption = spSelect.options[spSelect.selectedIndex];
+
+        var spMa = selectedOption.value;
+        var spTen = selectedOption.text;
+        var spGia = selectedOption.getAttribute('data-sp_gia');
+        var spSoLuong = document.getElementById('soluong').value;
+
+        // Tính thành tiền
+        var thanhTien = spGia * spSoLuong;
+
+        // Thêm dòng sản phẩm vào bảng chi tiết đơn hàng
+        var tableBody = document.getElementById('tblChiTietDonHang').getElementsByTagName('tbody')[0];
+        var newRow = tableBody.insertRow();
+
+        var cellTenSP = newRow.insertCell(0);
+        var cellSoLuong = newRow.insertCell(1);
+        var cellDongia = newRow.insertCell(2);
+        var cellThanhTien = newRow.insertCell(3);
+        var cellHanhDong = newRow.insertCell(4);
+
+        cellTenSP.innerHTML = '<input type="hidden" name="sp_ma[]" value="' + spMa + '">' + spTen;
+        cellSoLuong.innerHTML = '<input type="hidden" name="soluong[]" value="' + spSoLuong + '">' + spSoLuong;
+        cellDongia.innerHTML = spGia;
+        cellThanhTien.innerHTML = thanhTien;
+        cellHanhDong.innerHTML = '<input type="button" class="btn btn-outline-danger btnXoaSanPham" value="Xóa">';
+    });
+
+    document.getElementById('tblChiTietDonHang').addEventListener('click', function(e) {
+        if (e.target.classList.contains('btnXoaSanPham')) {
+            // Xóa dòng sản phẩm khỏi bảng chi tiết đơn hàng
+            e.target.parentElement.parentElement.remove();
+        }
+    });
+</script>
 <?php
 if (isset($_POST['add'])) {
     $arr_sp_ma = $_POST['sp_ma'];
     $arr_sp_dh_soluong = $_POST['soluong'];
 
-    // Ensure we convert inputs to numeric types
     $arr_sp_dh_soluong = array_map('intval', $arr_sp_dh_soluong);
 
     $arr_sp_dh_dongia = array_map(function ($spId) use ($listSP) {
@@ -111,10 +149,9 @@ if (isset($_POST['add'])) {
     }, $arr_sp_ma);
 
     $arr_sp_dh_tong = [];
-    $tongdon = 0.0;  // Ensure this is a float
+    $tongdon = 0.0;
 
     for ($i = 0; $i < count($arr_sp_ma); $i++) {
-        // Ensure the total price calculations use floats
         $arr_sp_dh_tong[$i] = $arr_sp_dh_soluong[$i] * $arr_sp_dh_dongia[$i];
         $tongdon += $arr_sp_dh_tong[$i];
     }
@@ -124,23 +161,17 @@ if (isset($_POST['add'])) {
     $trangthai = $_POST['trangthai'];
     $ngayban = $_POST['ngayban'];
 
-    // Add DonBan
-    DonBan::add($ngayban, $nhanvien, $khachhang, $tongdon, $trangthai);
-
-    // Get the last inserted DonBan
-    // $donban = DonBan::find_last();
-    $IdDon = $donban->Id;
+    $IdDon = DuAn::add($ngayban, $nhanvien, $khachhang, $tongdon, $trangthai);
 
     for ($i = 0; $i < count($arr_sp_ma); $i++) {
         $sp_ma = $arr_sp_ma[$i];
-        $sp_dh_soluong = $arr_sp_dh_soluong[$i];
         $sp_dh_dongia = $arr_sp_dh_dongia[$i];
+        $sp_dh_soluong = $arr_sp_dh_soluong[$i];
         $thanhtien = $arr_sp_dh_tong[$i];
 
-        ChiTietBan::add($IdDon, $sp_ma, null, $sp_dh_dongia, $sp_dh_soluong, $thanhtien);
+        ChitietDuAn::add($IdDon,$sp_ma, $sp_dh_ma, $sp_dh_dongia, $sp_dh_soluong, $thanhtien);
         SanPham::updatesl($sp_ma, $sp_dh_soluong);
     }
 
-    header('Location: index.php?controller=donban');
+    header('Location: index.php?controller=duan');
 }
-?>
