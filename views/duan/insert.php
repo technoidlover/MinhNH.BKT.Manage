@@ -55,7 +55,7 @@ $listSP = SanPham::all();
             <div class="form-row ml-4">
                 <div class="col-md-4 form-group mb-3">
                     <label for="sp_ma">Sản Phẩm</label>
-                    <select class="form-control" id="sp_ma" name="sp_ma[]">
+                    <select class="form-control" id="sp_ma" name="sp_ma">
                         <optgroup label="Chọn sản phẩm">
                             <?php foreach ($listSP as $item) : ?>
                                 <option value="<?= htmlspecialchars($item->Id) ?>" data-sp_gia="<?= htmlspecialchars($item->GiaBan) ?>"><?= htmlspecialchars($item->TenSP) ?></option>
@@ -65,7 +65,7 @@ $listSP = SanPham::all();
                 </div>
                 <div class="col-md-3 form-group mb-3">
                     <label for="soluong">Số lượng</label>
-                    <input type="number" class="form-control" value="1" id="soluong" name="soluong[]" placeholder="Số lượng">
+                    <input type="number" class="form-control" value="1" id="soluong" name="soluong" placeholder="Số lượng">
                 </div>
                 <div class="col-md-1 form-group mb-3">
                     <label for="btnThemSanPham">Action</label>
@@ -89,41 +89,40 @@ $listSP = SanPham::all();
             </table>
         </fieldset>
         <!-- Nút xóa -->
-        <input type="hidden" name="delete_row" id="delete_row" value="">
         <button type="submit" name="add" class="mt-2 ml-5 btn btn-danger">Tạo</button>
 </form>
 
 <script>
     // Logic thêm sản phẩm vào bảng chi tiết
     document.getElementById('btnThemSanPham').addEventListener('click', function() {
-        // Lấy thông tin sản phẩm đã chọn
-        var spSelect = document.getElementById('sp_ma');
-        var selectedOption = spSelect.options[spSelect.selectedIndex];
+    // Lấy thông tin sản phẩm đã chọn
+    var spSelect = document.getElementById('sp_ma');
+    var selectedOption = spSelect.options[spSelect.selectedIndex];
+    var spMa = selectedOption.value;
+    var spTen = selectedOption.text;
+    var spGia = selectedOption.getAttribute('data-sp_gia');
+    var spSoLuong = document.getElementById('soluong').value;
 
-        var spMa = selectedOption.value;
-        var spTen = selectedOption.text;
-        var spGia = selectedOption.getAttribute('data-sp_gia');
-        var spSoLuong = document.getElementById('soluong').value;
+    // Tính thành tiền
+    var thanhTien = spGia * spSoLuong;
 
-        // Tính thành tiền
-        var thanhTien = spGia * spSoLuong;
+    // Thêm dòng sản phẩm vào bảng chi tiết đơn hàng
+    var tableBody = document.getElementById('tblChiTietDonHang').getElementsByTagName('tbody')[0];
+    var newRow = tableBody.insertRow();
 
-        // Thêm dòng sản phẩm vào bảng chi tiết đơn hàng
-        var tableBody = document.getElementById('tblChiTietDonHang').getElementsByTagName('tbody')[0];
-        var newRow = tableBody.insertRow();
+    var cellTenSP = newRow.insertCell(0);
+    var cellSoLuong = newRow.insertCell(1);
+    var cellDongia = newRow.insertCell(2);
+    var cellThanhTien = newRow.insertCell(3);
+    var cellHanhDong = newRow.insertCell(4);
 
-        var cellTenSP = newRow.insertCell(0);
-        var cellSoLuong = newRow.insertCell(1);
-        var cellDongia = newRow.insertCell(2);
-        var cellThanhTien = newRow.insertCell(3);
-        var cellHanhDong = newRow.insertCell(4);
-
-        cellTenSP.innerHTML = '<input type="hidden" name="sp_ma[]" value="' + spMa + '">' + spTen;
-        cellSoLuong.innerHTML = '<input type="hidden" name="soluong[]" value="' + spSoLuong + '">' + spSoLuong;
-        cellDongia.innerHTML = spGia;
-        cellThanhTien.innerHTML = thanhTien;
-        cellHanhDong.innerHTML = '<input type="button" class="btn btn-outline-danger btnXoaSanPham" value="Xóa">';
-    });
+    cellTenSP.innerHTML = '<input type="hidden" name="sp_ma[]" value="' + spMa + '">' + spTen;
+    cellSoLuong.innerHTML = '<input type="hidden" name="soluong[]" value="' + spSoLuong + '">' + spSoLuong;
+    cellDongia.innerHTML = spGia;
+    cellThanhTien.innerHTML = thanhTien;
+    cellHanhDong.innerHTML = '<input type="button" class="btn btn-outline-danger btnXoaSanPham" value="Xóa">';
+    
+});
 
     document.getElementById('tblChiTietDonHang').addEventListener('click', function(e) {
         if (e.target.classList.contains('btnXoaSanPham')) {
@@ -134,11 +133,13 @@ $listSP = SanPham::all();
 </script>
 <?php
 if (isset($_POST['add'])) {
+    // Lấy các thông tin cần thiết từ form
     $arr_sp_ma = $_POST['sp_ma'];
     $arr_sp_dh_soluong = $_POST['soluong'];
 
     $arr_sp_dh_soluong = array_map('intval', $arr_sp_dh_soluong);
 
+    // Tìm giá bán của từng sản phẩm
     $arr_sp_dh_dongia = array_map(function ($spId) use ($listSP) {
         foreach ($listSP as $item) {
             if ($item->Id == $spId) {
@@ -148,30 +149,34 @@ if (isset($_POST['add'])) {
         return 0;
     }, $arr_sp_ma);
 
+    // Tính tổng cho từng sản phẩm
     $arr_sp_dh_tong = [];
     $tongdon = 0.0;
-
     for ($i = 0; $i < count($arr_sp_ma); $i++) {
         $arr_sp_dh_tong[$i] = $arr_sp_dh_soluong[$i] * $arr_sp_dh_dongia[$i];
         $tongdon += $arr_sp_dh_tong[$i];
     }
 
+    // Lấy các thông tin khác từ form
     $khachhang = $_POST['khachhang'];
     $nhanvien = $_POST['nhanvien'];
     $trangthai = $_POST['trangthai'];
     $ngayban = $_POST['ngayban'];
 
+    // Lưu dự án mới vào cơ sở dữ liệu
     $IdDon = DuAn::add($ngayban, $nhanvien, $khachhang, $tongdon, $trangthai);
 
+    // Lưu chi tiết dự án vào cơ sở dữ liệu
     for ($i = 0; $i < count($arr_sp_ma); $i++) {
         $sp_ma = $arr_sp_ma[$i];
         $sp_dh_dongia = $arr_sp_dh_dongia[$i];
         $sp_dh_soluong = $arr_sp_dh_soluong[$i];
         $thanhtien = $arr_sp_dh_tong[$i];
 
-        ChitietDuAn::add($IdDon,$sp_ma, $sp_dh_ma, $sp_dh_dongia, $sp_dh_soluong, $thanhtien);
-        SanPham::updatesl($sp_ma, $sp_dh_soluong);
+        chitietduan::add($IdDon, $sp_ma, $sp_dh_dongia, $sp_dh_soluong, $thanhtien);
     }
 
     header('Location: index.php?controller=duan');
+    exit; // Đảm bảo mã phía sau không được thực thi
 }
+?>

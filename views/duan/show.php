@@ -1,23 +1,27 @@
 <?php
 require_once('models/chitietduan.php');
-$list = [];
-$db = DB::getInstance();
-$reg = $db->query('SELECT ct.Id ,db.Id As "Don",sp.TenSP ,dvt.DonVi ,ct.GiaMua,ct.GiaBan ,ct.SoLuong ,ct.ThanhTien FROM chitietduan ct JOIN DonViTinh dvt JOIN DuAn db JOIN SanPham sp ON ct.IdDuAn = db.Id AND ct.IdSP = sp.Id AND sp.IdDVT = dvt.Id WHERE ct.IdDuAn=' . $DuAn->Id);
-foreach ($reg->fetchAll() as $item) {
-    $list[] = new chitietduan($item['Id'], $item['Don'], $item['TenSP'], $item['DonVi'], $item['GiaMua'], $item['GiaBan'], $item['SoLuong'], $item['ThanhTien']);
+require_once('models/duan.php');
+
+$duanId = $_GET['id'];
+$duan = DuAn::find($duanId);
+
+if ($duan) {
+    $listChiTietDuan = chitietduan::find($duanId);
+} else {
+    $listChiTietDuan = [];
 }
 
 ?>
+
 <h1 class="h3 mb-2 text-center text-gray-800 ">Chi tiết đơn</h1>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Thông tin đơn</h6>
     </div>
-
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -28,24 +32,17 @@ foreach ($reg->fetchAll() as $item) {
                         <th>Trạng Thái</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <tr>
-                        <td><?= $DuAn->Id ?></td>
-                        <td><?= date('d/m/Y H:i:s', strtotime($DuAn->NgayBan)) ?></td>
-                        <td><?= $DuAn->IdNV ?></td>
-                        <td><?= $DuAn->IdKH ?></td>
-                        <td><?= number_format($DuAn->ThanhTien, 0, ",", ".") ?> VNĐ</td>
-                        <td><?php
-                            if ($DuAn->TrangThai == "1")
-                                echo "Đã Thanh Toán";
-                            else echo "Chưa thanh toán";
-
-                            ?></td>
+                        <td><?= $duan->Id ?></td>
+                        <td><?= date('d/m/Y H:i:s', strtotime($duan->NgayBan)) ?></td>
+                        <td><?= $duan->IdNV ?></td>
+                        <td><?= $duan->IdKH ?></td>
+                        <td><?= number_format($duan->ThanhTien, 0, ",", ".") ?> VNĐ</td>
+                        <td><?= $duan->TrangThai == "1" ? "Đã Thanh Toán" : "Chưa thanh toán" ?></td>
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
 </div>
@@ -54,68 +51,52 @@ foreach ($reg->fetchAll() as $item) {
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Chi Tiết Đơn</h6>
     </div>
-
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <tfoot>
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
                     <tr>
                         <th>STT</th>
                         <th>Sản Phẩm</th>
                         <th>Đơn Giá</th>
                         <th>Số Lượng</th>
                         <th>Thành Tiền</th>
-
                     </tr>
-                </tfoot>
-
+                </thead>
                 <tbody>
-
                     <?php
-                    $dem = 1;
-                    foreach ($list as $item) {
-
-                        echo  "<tr><td>$dem</td>";
-                        echo  "<td>$item->IdSP</td>";
-                        echo  "<td>" . number_format($item->GiaBan, 0, ",", ".") . " VNĐ</td>";
-                        echo  "<td>$item->SoLuong</td>";
-                        echo  "<td>" . number_format($item->ThanhTien, 0, ",", ".") . " VNĐ</td>";
-                        /*                echo  " <td><?=$DuAn->IdNV ?></td>";*/
-                        /*                echo  " <td><?=$DuAn->IdKH ?></td>";*/
-                        /*                 echo  "<td><?=number_format($DuAn->ThanhTien,0,",",".") ?> VNĐ</td>";*/
-                        /*                echo  " <td><?=$DuAn->TrangThai ?></td>";*/
-                        //                    echo "</tr>";
-                        $dem++;
+                    $stt = 1;
+                    foreach ($listChiTietDuan as $item) {
+                        echo "<tr>";
+                        echo "<td>{$stt}</td>";
+                        echo "<td>{$item->IdSP}</td>";
+                        echo "<td>" . number_format($item->GiaBan, 0, ",", ".") . " VNĐ</td>";
+                        echo "<td>{$item->SoLuong}</td>";
+                        echo "<td>" . number_format($item->ThanhTien, 0, ",", ".") . " VNĐ</td>";
+                        echo "</tr>";
+                        $stt++;
                     }
                     ?>
-
                 </tbody>
             </table>
-
         </div>
     </div>
-    <form method="post" name="dc">
-        <?php
-
-        if ($DuAn->TrangThai == "1") { ?>
+    <form method="post">
+        <?php if ($duan->TrangThai == "1") { ?>
             <button type="submit" class="btn-outline-primary btn" disabled>Đã Thanh Toán</button>
             <button type="submit" class="btn-outline-primary btn" name="chua">Chưa Thanh Toán</button>
-        <?php
-
-        } else {
-        ?>
+        <?php } else { ?>
             <button type="submit" class="btn-outline-primary btn" name="thanhtoan">Đã Thanh Toán</button>
             <button type="submit" class="btn-outline-primary btn" disabled>Chưa Thanh Toán</button>
         <?php } ?>
     </form>
 </div>
-<?php
 
+<?php
 if (isset($_POST['chua'])) {
-    DuAn::chuathanhtoan($DuAn->Id);
+    DuAn::chuathanhtoan($duan->Id);
 }
 if (isset($_POST['thanhtoan'])) {
-    DuAn::thanhtoan($DuAn->Id);
+    DuAn::thanhtoan($duan->Id);
 }
-
 ?>

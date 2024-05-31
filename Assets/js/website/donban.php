@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     $(document).click(function () {
 
     });
@@ -81,4 +81,4 @@
         // Xóa dòng TR
         $(this).parent().parent()[0].remove();
     });
-</script>
+</script> -->
