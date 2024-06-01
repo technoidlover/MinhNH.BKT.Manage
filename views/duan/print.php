@@ -137,7 +137,7 @@ $duan['ThanhTien'] = $duan['ThanhTien'] ?? $tongThanhTien;
                 </tr>
                 <tr>
                     <td colspan="7" align="right"><b>Tải xuống excel</b></td>
-                    <td align="right"><b><a href="/bkt2/Assets/excel/baogia_<?=$duan_id?>.xlsx"><button>Tải xuống</button></a></b></td>
+                    <td align="right"><b><a href="/khoBKT/Assets/excel/baogia_<?=$duan_id?>.xlsx"><button>Tải xuống</button></a></b></td>
                 </tr>
             </tfoot>
         </table>

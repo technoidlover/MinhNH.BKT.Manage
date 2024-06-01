@@ -5,6 +5,12 @@ require_once('models/nhanvien.php');
 require_once('models/sanpham.php');
 require_once('models/duan.php');
 require_once('models/chitietduan.php');
+if (!isset($_SESSION['username']) || !isset($_SESSION['id'])) {
+    header('location:login.php'); // Kiểm tra xem người dùng đã đăng nhập chưa
+    exit();
+}
+$nhanvienId = $_SESSION['id']; // Lấy ID nhân viên từ session
+$username = $_SESSION['username']; // Tên đăng nhập của nhân viên
 
 // Get all necessary data
 $listNV = NhanVien::all();
@@ -35,18 +41,15 @@ $listSP = SanPham::all();
                 </div>
                 <div class="form-group col-md-4 ml-5">
                     <label for="validationDefault02">Trạng thái</label>
-                    <select class="form-control" name="trangthai">
+                    <!-- <select class="form-control" name="trangthai">
                         <option value="0" readonly>Mới tạo</option>
-                    </select>
+                    </select> -->
+                    <input type="text" class="form-control" value="0" readonly>
                 </div>
                 <div class="form-group col-md-2 ml-5">
-                    <label for="nhanvien">Nhân viên</label>
-                    <select class="form-control" name="nhanvien" id="nhanvien">
-                        <option value="">Chọn nhân viên</option>
-                        <?php foreach ($listNV as $item) : ?>
-                            <option value="<?= htmlspecialchars($item->Id) ?>"><?= htmlspecialchars($item->TaiKhoan) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label for="validationDefault02">Nhân viên</label>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($username); ?>" readonly>
+                    <input type="hidden" name="nhanvien" value="<?= htmlspecialchars($nhanvienId); ?>">
                 </div>
             </div>
         </fieldset>
