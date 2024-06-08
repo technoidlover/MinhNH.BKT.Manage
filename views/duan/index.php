@@ -20,7 +20,7 @@ require_once('models/duan.php');
                         <th>Nhân Viên</th>
                         <th>Khách Hàng</th>
                         <th>Tổng tiền</th>
-                        <th>Trạng Thái</th>
+                        
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -31,7 +31,7 @@ require_once('models/duan.php');
                         <th>Nhân Viên</th>
                         <th>Khách Hàng</th>
                         <th>Tổng tiền</th>
-                        <th>Trạng Thái</th>
+                        
                         <th>Action</th>
 
                     </tr>
@@ -50,13 +50,7 @@ require_once('models/duan.php');
                                     ?></td>
                                 <td><?= $item->IdKH ?></td>
                                 <td><?= number_format($item->ThanhTien, 0, ".", ",") ?> VNĐ</td>
-                                <td><?php
-                                    if ($item->TrangThai == "1") {
-                                        echo "Đã Thanh Toán";
-                                    } else {
-                                        echo "Chưa thanh toán";
-                                    }
-                                    ?></td>
+                                
                                 <td><!--<a  href="index.php?controller=khachhangs&action=showPost&id=--><!--"  class='btn btn-primary mr-3'>Details</a>-->
                                     <a href="index.php?controller=duan&action=show&id=<?= $item->Id ?>" class='btn btn-primary mr-3'>Details</a>
 

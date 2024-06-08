@@ -9,7 +9,7 @@ $controllers = array(
     'nhomtb' => ['index', 'insert', 'edit'],
     'quyen' => ['index','insert','edit'],
     'phanquyen' => ['index','insert','edit'],
-    'sanpham'   =>['index','insert','edit','view'],
+    'sanpham'   =>['index','insert','edit','view','filter'],
     'nhanvien' =>['index','insert','edit'],
     'donban' =>['index','insert','edit','show','print'],
     'chitietban' =>['index','insert','edit'],
@@ -17,6 +17,7 @@ $controllers = array(
     'chitietmua' =>['index','insert','edit'],
     'duan' => ['index', 'insert', 'edit', 'show', 'print'],
     'chitietduan' => ['index', 'insert', 'edit'],
+    'home' => ['index'],
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 
 // Nếu các tham số nhận được từ URL không hợp lệ (không thuộc list controller và action có thể gọi

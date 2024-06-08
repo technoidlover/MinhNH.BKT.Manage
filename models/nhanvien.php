@@ -65,22 +65,35 @@ class NhanVien
         header('Location: index.php?controller=nhanvien&action=index');
     }
 
-    static function update($id, $taiKhoan, $quyen, $isActive, $tenNV, $dienThoai, $email, $diaChi)
-    {
-        $db = DB::getInstance();
-        $req = $db->prepare('UPDATE NhanVien SET TaiKhoan = :taiKhoan, Quyen = :quyen, IsActive = :isActive, TenNV = :tenNV, DienThoai = :dienThoai, Email = :email, DiaChi = :diaChi WHERE Id = :id');
-        $req->execute(array(
-            'id' => $id,
-            'taiKhoan' => $taiKhoan,
-            'quyen' => $quyen,
-            'isActive' => $isActive,
-            'tenNV' => $tenNV,
-            'dienThoai' => $dienThoai,
-            'email' => $email,
-            'diaChi' => $diaChi
-        ));
-        header('Location: index.php?controller=nhanvien&action=index');
+    static function update($id, $taiKhoan, $matKhau, $quyen, $isActive, $tenNV, $dienThoai, $email, $diaChi)
+{
+    $db = DB::getInstance();
+
+    // Lấy mật khẩu hiện tại từ cơ sở dữ liệu nếu mật khẩu mới trống
+    if (empty($matKhau)) {
+        $req = $db->prepare('SELECT MatKhau FROM NhanVien WHERE Id = :id');
+        $req->execute(array('id' => $id));
+        $currentNhanVien = $req->fetch();
+        $matKhau = $currentNhanVien['MatKhau'];
+    } else {
+        $matKhau = md5($matKhau);
     }
+
+    $req = $db->prepare('UPDATE NhanVien SET TaiKhoan = :taiKhoan, MatKhau = :matKhau, Quyen = :quyen, IsActive = :isActive, TenNV = :tenNV, DienThoai = :dienThoai, Email = :email, DiaChi = :diaChi WHERE Id = :id');
+    $req->execute(array(
+        'id' => $id,
+        'taiKhoan' => $taiKhoan,
+        'matKhau' => $matKhau,
+        'quyen' => $quyen,
+        'isActive' => $isActive,
+        'tenNV' => $tenNV,
+        'dienThoai' => $dienThoai,
+        'email' => $email,
+        'diaChi' => $diaChi
+    ));
+    header('Location: index.php?controller=nhanvien&action=index');
+}
+
 
     static function delete($id)
     {

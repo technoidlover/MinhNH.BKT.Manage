@@ -5,7 +5,7 @@
         }
     </style>
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <img src="./Assets/img/logo.png" alt="" style="height: 190%; margin-left: -5%;">
     </a>
 

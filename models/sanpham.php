@@ -38,19 +38,123 @@ class SanPham
         $this->SoLuong = $SoLuong;
         $this->imgUrl = $imgUrl;
     }
-
-    static function all()
+    
+    public static function allFiltered($filters, $sort_by, $order)
     {
+        $db = DB::getInstance();
+        $conditions = [];
+        $params = [];
+
+        if (!empty($filters['MaSP'])) {
+            $conditions[] = 'MaSP LIKE :MaSP';
+            $params[':MaSP'] = '%' . $filters['MaSP'] . '%';
+        }
+
+        if (!empty($filters['TenSP'])) {
+            $conditions[] = 'TenSP LIKE :TenSP';
+            $params[':TenSP'] = '%' . $filters['TenSP'] . '%';
+        }
+
+        if (!empty($filters['IdDVT'])) {
+            $conditions[] = 'IdDVT = :IdDVT';
+            $params[':IdDVT'] = $filters['IdDVT'];
+        }
+
+        if (!empty($filters['IdNCC'])) {
+            $conditions[] = 'IdNCC = :IdNCC';
+            $params[':IdNCC'] = $filters['IdNCC'];
+        }
+
+        if (!empty($filters['GiaMua'])) {
+            $conditions[] = 'GiaMua = :GiaMua';
+            $params[':GiaMua'] = $filters['GiaMua'];
+        }
+
+        if (!empty($filters['GiaBan'])) {
+            $conditions[] = 'GiaBan = :GiaBan';
+            $params[':GiaBan'] = $filters['GiaBan'];
+        }
+
+        if (!empty($filters['SoLuong'])) {
+            $conditions[] = 'SoLuong = :SoLuong';
+            $params[':SoLuong'] = $filters['SoLuong'];
+        }
+
+        if (!empty($filters['IdHSX'])) {
+            $conditions[] = 'IdHSX = :IdHSX';
+            $params[':IdHSX'] = $filters['IdHSX'];
+        }
+
+        if (!empty($filters['XuatXu'])) {
+            $conditions[] = 'XuatXu LIKE :XuatXu';
+            $params[':XuatXu'] = '%' . $filters['XuatXu'] . '%';
+        }
+
+        if (!empty($filters['IdNTB'])) {
+            $conditions[] = 'IdNTB = :IdNTB';
+            $params[':IdNTB'] = $filters['IdNTB'];
+        }
+
+        $sql = 'SELECT * FROM SanPham';
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+        $sql .= ' ORDER BY ' . $sort_by . ' ' . $order;
+
+        $stmt = $db->prepare($sql);
+        foreach ($params as $key => &$val) {
+            $stmt->bindParam($key, $val);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    public static function getDonViTinhs()
+    {
+        $db = DB::getInstance();
+        $stmt = $db->query("SELECT Id, DonVi FROM DonViTinh");
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public static function getNhaCungCaps()
+    {
+        $db = DB::getInstance();
+        $stmt = $db->query("SELECT Id, TenNCC FROM NhaCungCap");
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public static function getHangSXs()
+    {
+        $db = DB::getInstance();
+        $stmt = $db->query("SELECT Id, TenHang FROM HangSX");
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public static function getNhomThietBis()
+    {
+        $db = DB::getInstance();
+        $stmt = $db->query("SELECT Id, TenNhom FROM NhomThietBi");
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+    static function all($sort_by = 'Id', $order = 'asc')
+    {
+        $allowed_sort_columns = ['Id', 'MaSP', 'TenDVT', 'TenNCC', 'TenHSX', 'XuatXu', 'TenNTB'];
+        if (!in_array($sort_by, $allowed_sort_columns)) {
+            $sort_by = 'Id';
+        }
+        $order = ($order == 'desc') ? 'desc' : 'asc';
+
         $list = [];
         $db = DB::getInstance();
-        $req = $db->query('
-        SELECT sp.Id, sp.MaSP, sp.TenSP, sp.IdDVT, dvt.DonVi as TenDVT, sp.IdNCC, ncc.TenNCC, sp.IdHSX, hsx.TenHang as TenHSX, sp.IdNTB, ntb.TenNhom as TenNTB, sp.XuatXu, sp.GiaMua, sp.GiaBan, sp.SoLuong, sp.imgUrl
-        FROM SanPham sp
-        LEFT JOIN DonViTinh dvt ON sp.IdDVT = dvt.Id
-        LEFT JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id
-        LEFT JOIN HangSX hsx ON sp.IdHSX = hsx.Id
-        LEFT JOIN NhomThietBi ntb ON sp.IdNTB = ntb.Id
-    ');
+        $req = $db->query("
+            SELECT sp.Id, sp.MaSP, sp.TenSP, sp.IdDVT, dvt.DonVi as TenDVT, sp.IdNCC, ncc.TenNCC, sp.IdHSX, hsx.TenHang as TenHSX, sp.IdNTB, ntb.TenNhom as TenNTB, sp.XuatXu, sp.GiaMua, sp.GiaBan, sp.SoLuong, sp.imgUrl
+            FROM SanPham sp
+            LEFT JOIN DonViTinh dvt ON sp.IdDVT = dvt.Id
+            LEFT JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id
+            LEFT JOIN HangSX hsx ON sp.IdHSX = hsx.Id
+            LEFT JOIN NhomThietBi ntb ON sp.IdNTB = ntb.Id
+            ORDER BY $sort_by $order
+        ");
 
         foreach ($req->fetchAll() as $item) {
             $list[] = new SanPham(
@@ -74,6 +178,8 @@ class SanPham
         }
         return $list;
     }
+
+
 
     static function find($id)
     {
@@ -176,7 +282,7 @@ class SanPham
         $targetFile = $targetDir . basename($file["name"]);
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
+    
         $check = getimagesize($file["tmp_name"]);
         if ($check !== false) {
             $uploadOk = 1;
@@ -184,17 +290,19 @@ class SanPham
             echo "File is not an image.";
             $uploadOk = 0;
         }
-
+    
         if (file_exists($targetFile)) {
-            echo "Sorry, file already exists.";
-            $uploadOk = 0;
+            // If file already exists, return the path to the existing file
+            // echo "File already exists. Using existing file.";
+            return $targetFile;
+            $uploadOk = 1;
         }
-
+    
         if ($file["size"] > 500000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }
-
+    
         if (
             $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif"
@@ -202,7 +310,7 @@ class SanPham
             echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
             $uploadOk = 0;
         }
-
+    
         if ($uploadOk == 0) {
             echo "Sorry, your file was not uploaded.";
             return null;
@@ -215,4 +323,5 @@ class SanPham
             }
         }
     }
+    
 }

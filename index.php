@@ -3,10 +3,8 @@ require_once('connection.php');
 session_start();
 if (!isset($_SESSION['username'])){
    header('location:login.php');
-//    get id username in session 
-
+   exit(); // Thêm exit để dừng script sau khi chuyển hướng
 }
-
 
 if (isset($_GET['controller'])) {
     $controller = $_GET['controller'];
@@ -15,9 +13,9 @@ if (isset($_GET['controller'])) {
     } else {
         $action = 'index';
     }
+} else {
+    $controller = 'home';  // Thay đổi từ 'sanpham' sang 'home'
+    $action = 'index';
 }
-    else {
-        $controller = 'sanpham';
-        $action = 'index';
-    }
+
 require_once('routes.php');

@@ -81,7 +81,7 @@ if ($duan) {
             </table>
         </div>
     </div>
-    <form method="post">
+    <form method="post" style="display:none;>
         <?php if ($duan->TrangThai == "1") { ?>
             <button type="submit" class="btn-outline-primary btn" disabled>Đã Thanh Toán</button>
             <button type="submit" class="btn-outline-primary btn" name="chua">Chưa Thanh Toán</button>

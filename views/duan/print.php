@@ -81,16 +81,7 @@ $duan['ThanhTien'] = $duan['ThanhTien'] ?? $tongThanhTien;
                     <td><b><?=number_format($duan['ThanhTien'],0,",",".") ?> VNĐ</b></td>
                 </tr>
                 <tr>
-                    <td>Trạng Thái:</td>
-                    <td><b>
-                        <?php
-                        if ($duan['TrangThai']=="1")
-                            echo "Đã Thanh Toán";
-                        else
-                            echo "Chưa thanh toán";
-                        ?>
-                    </b></td>
-                </tr>
+
             </tbody>
         </table>
 
@@ -137,7 +128,7 @@ $duan['ThanhTien'] = $duan['ThanhTien'] ?? $tongThanhTien;
                 </tr>
                 <tr>
                     <td colspan="7" align="right"><b>Tải xuống excel</b></td>
-                    <td align="right"><b><a href="/khoBKT/Assets/excel/baogia_<?=$duan_id?>.xlsx"><button>Tải xuống</button></a></b></td>
+                    <td align="right"><b><a href="/khoBKT/Assets/baogia_excel/baogia_<?=$duan_id?>.xlsx"><button>Tải xuống</button></a></b></td>
                 </tr>
             </tfoot>
         </table>
@@ -176,7 +167,7 @@ $duan['ThanhTien'] = $duan['ThanhTien'] ?? $tongThanhTien;
                     
                     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
                     //filename sẽ là "baogia_id.xlsx" và lưu vào thư mục "Assets"
-                    $outputFile = 'Assets/excel/baogia_'.$duan_id.'.xlsx';
+                    $outputFile = 'Assets/baogia_excel/baogia_'.$duan_id.'.xlsx';
                     // $writer->save('Assets/excel/baogia_'.$duan_id.'.xlsx');                     
                     $writer->save($outputFile);
 
