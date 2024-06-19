@@ -18,6 +18,8 @@ $username = $_SESSION['username']; // Tên đăng nhập của nhân viên
 $listNV = NhanVien::all();
 $listKH = KhachHang::all();
 $listNTB = SanPham::getNhomThietBis();
+$listSP = SanPham::all(); // Lấy tất cả sản phẩm để tính giá
+
 ?>
 
 <form method="post" name="add">
@@ -50,58 +52,64 @@ $listNTB = SanPham::getNhomThietBis();
                     <input type="text" class="form-control" value="<?= htmlspecialchars($username); ?>" readonly>
                     <input type="hidden" name="nhanvien" value="<?= htmlspecialchars($nhanvienId); ?>">
                 </div>
+                <div class="form-group col-md-6 ml-5">
+                    <label for="thongtin">Thông tin</label>
+                    <textarea class="form-control" name="thongtin" id="thongtin" rows="3"></textarea>
+                </div>
             </div>
         </fieldset>
         <fieldset style="border-collapse: collapse; border: 1px solid red" class="mt-5 ml-5 mr-5">
             <legend class="ml-2">Chi tiết đơn</legend>
             <div class="form-row ml-4">
-                            <!-- Dropdown chọn nhóm sản phẩm -->
-            <div class="col-md-4 form-group mb-3">
-                <label for="ntb_ma">Nhóm sản phẩm</label>
-                <select class="form-control" id="ntb_ma" name="ntb_ma">
-                    <optgroup label="Chọn nhóm sản phẩm">
-                        <option value="">Chọn nhóm sản phẩm</option>
-                        <?php foreach ($listNTB as $item) : ?>
-                            <option value="<?= htmlspecialchars($item->Id) ?>"><?= htmlspecialchars($item->TenNhom) ?></option>
-                        <?php endforeach; ?>
-                    </optgroup>
-                </select>
+                <!-- Dropdown chọn nhóm sản phẩm -->
+                <div class="col-md-4 form-group mb-3">
+                    <label for="ntb_ma">Nhóm sản phẩm</label>
+                    <select class="form-control" id="ntb_ma" name="ntb_ma">
+                        <optgroup label="Chọn nhóm sản phẩm">
+                            <option value="">Chọn nhóm sản phẩm</option>
+                            <?php foreach ($listNTB as $item) : ?>
+                                <option value="<?= htmlspecialchars($item->Id) ?>"><?= htmlspecialchars($item->TenNhom) ?></option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                    </select>
+                </div>
+                <!-- Dropdown chọn sản phẩm -->
+                <div class="col-md-4 form-group mb-3">
+                    <label for="sp_ma">Sản Phẩm</label>
+                    <select class="form-control" id="sp_ma" name="sp_ma">
+                        <optgroup label="Chọn sản phẩm">
+                            <!-- Các sản phẩm sẽ được nạp động từ nhóm sản phẩm -->
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label for="soluong">Số lượng</label>
+                    <input type="number" class="form-control" value="1" id="soluong" name="soluong" placeholder="Số lượng">
+                </div>
+                <div class="col-md-1 form-group mb-3">
+                    <label for="btnThemSanPham">Action</label>
+                    <input type="button" class="form-control btn btn-outline-primary" id="btnThemSanPham" value="Thêm">
+                </div>
             </div>
-            <!-- Dropdown chọn sản phẩm -->
-            <div class="col-md-4 form-group mb-3">
-                <label for="sp_ma">Sản Phẩm</label>
-                <select class="form-control" id="sp_ma" name="sp_ma">
-                    <optgroup label="Chọn sản phẩm">
-                        <!-- Các sản phẩm sẽ được nạp động từ nhóm sản phẩm -->
-                    </optgroup>
-                </select>
-            </div>
-            <div class="col-md-3 form-group mb-3">
-                <label for="soluong">Số lượng</label>
-                <input type="number" class="form-control" value="1" id="soluong" name="soluong" placeholder="Số lượng">
-            </div>
-            <div class="col-md-1 form-group mb-3">
-                <label for="btnThemSanPham">Action</label>
-                <input type="button" class="form-control btn btn-outline-primary" id="btnThemSanPham" value="Thêm">
-            </div>
-        </div>
-        <table id="tblChiTietDonHang" class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Đơn giá</th>
-                    <th>Thành tiền</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Rows will be added dynamically -->
-            </tbody>
-        </table>
-    </fieldset>
-    <button type="submit" name="add" class="mt-2 ml-5 btn btn-danger">Tạo</button>
+            <table id="tblChiTietDonHang" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be added dynamically -->
+                </tbody>
+            </table>
+        </fieldset>
+        <button type="submit" name="add" class="mt-2 ml-5 btn btn-danger">Tạo</button>
+    </div>
 </form>
+
 <script>
     document.getElementById('ntb_ma').addEventListener('change', function() {
         var ntbId = this.value;
@@ -162,6 +170,7 @@ $listNTB = SanPham::getNhomThietBis();
         }
     });
 </script>
+
 <?php
 if (isset($_POST['add'])) {
     // Lấy các thông tin cần thiết từ form
@@ -193,9 +202,10 @@ if (isset($_POST['add'])) {
     $nhanvien = $_POST['nhanvien'];
     $trangthai = $_POST['trangthai'];
     $ngayban = $_POST['ngayban'];
+    $thongtin = $_POST['thongtin'];
 
     // Lưu dự án mới vào cơ sở dữ liệu
-    $IdDon = DuAn::add($ngayban, $nhanvien, $khachhang, $tongdon, $trangthai);
+    $IdDon = DuAn::add($ngayban, $nhanvien, $khachhang, $tongdon, $trangthai, $thongtin);
 
     // Lưu chi tiết dự án vào cơ sở dữ liệu
     for ($i = 0; $i < count($arr_sp_ma); $i++) {

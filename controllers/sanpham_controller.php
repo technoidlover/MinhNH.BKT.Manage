@@ -1,6 +1,6 @@
 <?php
-require_once ('controllers/base_controller.php');
-require_once ('models/sanpham.php');
+require_once('controllers/base_controller.php');
+require_once('models/sanpham.php');
 
 class SanPhamController extends BaseController
 {
@@ -24,36 +24,39 @@ class SanPhamController extends BaseController
             'SoLuong' => isset($_GET['SoLuong']) ? $_GET['SoLuong'] : '',
             'IdHSX' => isset($_GET['IdHSX']) ? $_GET['IdHSX'] : '',
             'XuatXu' => isset($_GET['XuatXu']) ? $_GET['XuatXu'] : '',
-            'IdNTB' => isset($_GET['IdNTB']) ? $_GET['IdNTB'] : ''
+            'IdNTB' => isset($_GET['IdNTB']) ? $_GET['IdNTB'] : '',
         ];
 
-       // Kiểm tra xem có tham số lọc được gửi lên hay không
-        if (!empty(array_filter($filters))) {
-            // Nếu có, gọi hàm allFiltered để lấy sản phẩm đã lọc
+        try {
             $sanpham = SanPham::allFiltered($filters, $sort_by, $order);
-        } else {
-            // Nếu không, gọi hàm all để lấy tất cả sản phẩm
-            $sanpham = SanPham::all($sort_by, $order);
+            $donViTinhs = SanPham::getDonViTinhs();
+            $nhaCungCaps = SanPham::getNhaCungCaps();
+            $hangSXs = SanPham::getHangSXs();
+            $nhomThietBis = SanPham::getNhomThietBis();
+            
+
+        } catch (Exception $e) {
+            error_log('Error fetching data: ' . $e->getMessage());
+            $this->render('index', ['error' => 'Error fetching data. Please contact the administrator.']);
+            return;
         }
 
-        // Lấy danh sách cho các dropdown
-        $donViTinhs = SanPham::getDonViTinhs();
-        $nhaCungCaps = SanPham::getNhaCungCaps();
-        $hangSXs = SanPham::getHangSXs();
-        $nhomThietBis = SanPham::getNhomThietBis();
-
-        $data = array(
+        $data = [
             'sanpham' => $sanpham,
             'order' => $order,
+            'sort_by' => $sort_by,
             'filters' => $filters,
             'donViTinhs' => $donViTinhs,
             'nhaCungCaps' => $nhaCungCaps,
             'hangSXs' => $hangSXs,
-            'nhomThietBis' => $nhomThietBis
-        );
+            'nhomThietBis' => $nhomThietBis,
+            
+        ];
 
         $this->render('index', $data);
     }
+
+    // Other methods remain the same
 
     public function insert()
     {
@@ -72,5 +75,26 @@ class SanPhamController extends BaseController
         $sanpham = SanPham::find($_GET['id']);
         $data = array('sanpham' => $sanpham);
         $this->render('view', $data);
+    }
+
+    public function delete()
+    {
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+            try {
+                if (SanPham::delete($id)) {
+                    header('Location: index.php?controller=sanpham&action=index');
+                    exit();
+                } else {
+                    $this->render('index', ['error' => 'Error deleting the product.']);
+                }
+            } catch (Exception $e) {
+                error_log('Error deleting the product with ID: ' . $id . '. Error message: ' . $e->getMessage());
+                $this->render('index', ['error' => 'Error deleting the product. Please contact the administrator.']);
+            }
+        } else {
+            error_log('No product ID provided for deletion.');
+            $this->render('index', ['error' => 'No product ID provided for deletion.']);
+        }
     }
 }

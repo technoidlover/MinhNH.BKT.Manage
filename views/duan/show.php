@@ -10,10 +10,9 @@ if ($duan) {
 } else {
     $listChiTietDuan = [];
 }
-
 ?>
 
-<h1 class="h3 mb-2 text-center text-gray-800 ">Chi tiết đơn</h1>
+<h1 class="h3 mb-2 text-center text-gray-800">Chi tiết đơn</h1>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -28,6 +27,7 @@ if ($duan) {
                         <th>Ngày Bán</th>
                         <th>Nhân Viên</th>
                         <th>Khách Hàng</th>
+                        <th>Thông Tin</th>
                         <th>Tổng tiền</th>
                         <th>Trạng Thái</th>
                     </tr>
@@ -38,6 +38,7 @@ if ($duan) {
                         <td><?= date('d/m/Y H:i:s', strtotime($duan->NgayBan)) ?></td>
                         <td><?= $duan->IdNV ?></td>
                         <td><?= $duan->IdKH ?></td>
+                        <td><?= $duan->ThongTin ?></td>
                         <td><?= number_format($duan->ThanhTien, 0, ",", ".") ?> VNĐ</td>
                         <td><?= $duan->TrangThai == "1" ? "Đã Thanh Toán" : "Chưa thanh toán" ?></td>
                     </tr>
@@ -81,7 +82,7 @@ if ($duan) {
             </table>
         </div>
     </div>
-    <form method="post" style="display:none;>
+    <form method="post" style="display:none;">
         <?php if ($duan->TrangThai == "1") { ?>
             <button type="submit" class="btn-outline-primary btn" disabled>Đã Thanh Toán</button>
             <button type="submit" class="btn-outline-primary btn" name="chua">Chưa Thanh Toán</button>

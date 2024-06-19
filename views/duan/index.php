@@ -2,7 +2,7 @@
 require_once('models/duan.php');
 ?>
 
-<h1 class="h3 mb-2 text-center text-gray-800 ">Dự án</h1>
+<h1 class="h3 mb-2 text-center text-gray-800">Dự án</h1>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -19,8 +19,8 @@ require_once('models/duan.php');
                         <th>Thời gian</th>
                         <th>Nhân Viên</th>
                         <th>Khách Hàng</th>
-                        <th>Tổng tiền</th>
-                        
+                        <th>Thông tin</th>
+                        <th>Tổng tiền</th>                        
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -30,35 +30,30 @@ require_once('models/duan.php');
                         <th>Thời gian</th>
                         <th>Nhân Viên</th>
                         <th>Khách Hàng</th>
+                        <th>Thông tin</th>
                         <th>Tổng tiền</th>
-                        
                         <th>Action</th>
-
                     </tr>
                 </tfoot>
                 <tbody>
-
                     <?php
                     foreach ($duan as $item) {
-
                     ?>
                         <form method="post">
                             <tr>
-                                <td><?= $item->Id   ?></td>
+                                <td><?= $item->Id ?></td>
                                 <td><?= date('d/m/Y', strtotime($item->NgayBan)) ?></td>
-                                <td><?= $item->IdNV
-                                    ?></td>
+                                <td><?= $item->IdNV ?></td>
                                 <td><?= $item->IdKH ?></td>
+                                <td><?= $item->ThongTin ?></td>
                                 <td><?= number_format($item->ThanhTien, 0, ".", ",") ?> VNĐ</td>
-                                
-                                <td><!--<a  href="index.php?controller=khachhangs&action=showPost&id=--><!--"  class='btn btn-primary mr-3'>Details</a>-->
+                                <td>
                                     <a href="index.php?controller=duan&action=show&id=<?= $item->Id ?>" class='btn btn-primary mr-3'>Details</a>
-
                                     <a href="index.php?controller=duan&action=print&id=<?= $item->Id ?>" class='btn btn-primary mr-3'>Print</a>
                                     <button type="submit" name="dele" value="<?= $item->Id ?>" class='btn btn-danger'>Delete</button>
+                                </td>
+                            </tr>
                         </form>
-                        </td>
-                        </tr>
                     <?php
                     }
                     ?>
@@ -67,9 +62,10 @@ require_once('models/duan.php');
         </div>
     </div>
 </div>
+
 <?php
 if (isset($_POST['dele'])) {
     $id = $_POST['dele'];
-    duan::delete($id);
+    DuAn::delete($id);
 }
 ?>

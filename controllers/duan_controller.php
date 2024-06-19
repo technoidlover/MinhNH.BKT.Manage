@@ -50,8 +50,8 @@ class duanController extends BaseController
 
     public function create()
     {
-        if (isset($_POST['ngayban']) && isset($_POST['idnv']) && isset($_POST['idkh']) && isset($_POST['tong']) && isset($_POST['trangthai'])) {
-            $duanId = DuAn::add($_POST['ngayban'], $_POST['idnv'], $_POST['idkh'], $_POST['tong'], $_POST['trangthai']);
+        if (isset($_POST['ngayban']) && isset($_POST['idnv']) && isset($_POST['idkh']) && isset($_POST['tong']) && isset($_POST['trangthai']) && isset($_POST['thongtin'])) {
+            $duanId = DuAn::add($_POST['ngayban'], $_POST['idnv'], $_POST['idkh'], $_POST['tong'], $_POST['trangthai'], $_POST['thongtin']);
             // Xử lý chèn chi tiết dự án nếu có trong form
             if (isset($_POST['chitiet_sp']) && is_array($_POST['chitiet_sp'])) {
                 foreach ($_POST['chitiet_sp'] as $ct) {

@@ -38,83 +38,89 @@ class SanPham
         $this->SoLuong = $SoLuong;
         $this->imgUrl = $imgUrl;
     }
-    
     public static function allFiltered($filters, $sort_by, $order)
-    {
-        $db = DB::getInstance();
-        $conditions = [];
-        $params = [];
+{
+    $db = DB::getInstance();
+    $conditions = [];
+    $params = [];
 
-        if (!empty($filters['MaSP'])) {
-            $conditions[] = 'MaSP LIKE :MaSP';
-            $params[':MaSP'] = '%' . $filters['MaSP'] . '%';
-        }
-
-        if (!empty($filters['TenSP'])) {
-            $conditions[] = 'TenSP LIKE :TenSP';
-            $params[':TenSP'] = '%' . $filters['TenSP'] . '%';
-        }
-
-        if (!empty($filters['IdDVT'])) {
-            $conditions[] = 'IdDVT = :IdDVT';
-            $params[':IdDVT'] = $filters['IdDVT'];
-        }
-
-        if (!empty($filters['IdNCC'])) {
-            $conditions[] = 'IdNCC = :IdNCC';
-            $params[':IdNCC'] = $filters['IdNCC'];
-        }
-
-        if (!empty($filters['GiaMua'])) {
-            $conditions[] = 'GiaMua = :GiaMua';
-            $params[':GiaMua'] = $filters['GiaMua'];
-        }
-
-        if (!empty($filters['GiaBan'])) {
-            $conditions[] = 'GiaBan = :GiaBan';
-            $params[':GiaBan'] = $filters['GiaBan'];
-        }
-
-        if (!empty($filters['SoLuong'])) {
-            $conditions[] = 'SoLuong = :SoLuong';
-            $params[':SoLuong'] = $filters['SoLuong'];
-        }
-
-        if (!empty($filters['IdHSX'])) {
-            $conditions[] = 'IdHSX = :IdHSX';
-            $params[':IdHSX'] = $filters['IdHSX'];
-        }
-
-        if (!empty($filters['XuatXu'])) {
-            $conditions[] = 'XuatXu LIKE :XuatXu';
-            $params[':XuatXu'] = '%' . $filters['XuatXu'] . '%';
-        }
-
-        if (!empty($filters['IdNTB'])) {
-            $conditions[] = 'IdNTB = :IdNTB';
-            $params[':IdNTB'] = $filters['IdNTB'];
-        }
-
-        $sql = 'SELECT * FROM SanPham';
-        if (!empty($conditions)) {
-            $sql .= ' WHERE ' . implode(' AND ', $conditions);
-        }
-        $sql .= ' ORDER BY ' . $sort_by . ' ' . $order;
-
-        $stmt = $db->prepare($sql);
-        foreach ($params as $key => &$val) {
-            $stmt->bindParam($key, $val);
-        }
-
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    if (!empty($filters['MaSP'])) {
+        $conditions[] = 'sp.MaSP LIKE :MaSP';
+        $params[':MaSP'] = '%' . $filters['MaSP'] . '%';
     }
+
+    if (!empty($filters['TenSP'])) {
+        $conditions[] = 'sp.TenSP LIKE :TenSP';
+        $params[':TenSP'] = '%' . $filters['TenSP'] . '%';
+    }
+
+    if (!empty($filters['IdDVT'])) {
+        $conditions[] = 'sp.IdDVT = :IdDVT';
+        $params[':IdDVT'] = $filters['IdDVT'];
+    }
+
+    if (!empty($filters['IdNCC'])) {
+        $conditions[] = 'sp.IdNCC = :IdNCC';
+        $params[':IdNCC'] = $filters['IdNCC'];
+    }
+
+    if (!empty($filters['GiaMua'])) {
+        $conditions[] = 'sp.GiaMua = :GiaMua';
+        $params[':GiaMua'] = $filters['GiaMua'];
+    }
+
+    if (!empty($filters['GiaBan'])) {
+        $conditions[] = 'sp.GiaBan = :GiaBan';
+        $params[':GiaBan'] = $filters['GiaBan'];
+    }
+
+    if (!empty($filters['SoLuong'])) {
+        $conditions[] = 'sp.SoLuong = :SoLuong';
+        $params[':SoLuong'] = $filters['SoLuong'];
+    }
+
+    if (!empty($filters['IdHSX'])) {
+        $conditions[] = 'sp.IdHSX = :IdHSX';
+        $params[':IdHSX'] = $filters['IdHSX'];
+    }
+
+    if (!empty($filters['XuatXu'])) {
+        $conditions[] = 'sp.XuatXu LIKE :XuatXu';
+        $params[':XuatXu'] = '%' . $filters['XuatXu'] . '%';
+    }
+
+    if (!empty($filters['IdNTB'])) {
+        $conditions[] = 'sp.IdNTB = :IdNTB';
+        $params[':IdNTB'] = $filters['IdNTB'];
+    }
+
+    $sql = 'SELECT sp.*, dvt.DonVi as TenDVT, ncc.TenNCC, hsx.TenHang as TenHSX, ntb.TenNhom as TenNTB 
+            FROM SanPham sp
+            LEFT JOIN DonViTinh dvt ON sp.IdDVT = dvt.Id
+            LEFT JOIN NhaCungCap ncc ON sp.IdNCC = ncc.Id
+            LEFT JOIN HangSX hsx ON sp.IdHSX = hsx.Id
+            LEFT JOIN NhomThietBi ntb ON sp.IdNTB = ntb.Id';
+
+    if (!empty($conditions)) {
+        $sql .= ' WHERE ' . implode(' AND ', $conditions);
+    }
+    $sql .= ' ORDER BY ' . $sort_by . ' ' . $order;
+
+    $stmt = $db->prepare($sql);
+    foreach ($params as $key => &$val) {
+        $stmt->bindParam($key, $val);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
     public static function getDonViTinhs()
     {
         $db = DB::getInstance();
         $stmt = $db->query("SELECT Id, DonVi FROM DonViTinh");
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
 
     public static function getNhaCungCaps()
     {
